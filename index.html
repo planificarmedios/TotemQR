@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Totem Interactivo</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000; /* 👈 color de fondo de seguridad */
+      }
+
+      #totemWrapper {
+        position: fixed;
+        inset: 0; /* equivale a top:0; left:0; right:0; bottom:0 */
+        width: 100vw;
+        height: 100vh;
+        transform-origin: center center;
+        transition: transform 0.6s ease;
+        overflow: hidden;
+        /* background: rgba(233, 222, 222, 0.4); */
+      }
+
+      .voice-config {
+        position: absolute;
+
+        top: 20%;
+        right: 20px;
+
+        width: 280px;
+        max-width: 90%;
+
+        background: rgba(0, 0, 0, 0.75);
+
+        border: 2px solid #666;
+        border-radius: 12px;
+
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+
+        color: white;
+
+        font-family: Arial, sans-serif;
+
+        box-sizing: border-box;
+
+        z-index: 1800;
+
+        overflow: hidden;
+      }
+
+      /* Barra superior */
+
+      .voice-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 8px 10px;
+
+        background: rgba(255, 255, 255, 0.12);
+
+        font-size: 14px;
+        font-weight: bold;
+
+        cursor: move;
+
+        user-select: none;
+      }
+
+      /* Botón minimizar */
+
+      #minimizeVoiceBtn {
+        width: 26px;
+        height: 26px;
+
+        border: none;
+        border-radius: 6px;
+
+        background: rgba(255, 255, 255, 0.2);
+
+        color: white;
+
+        font-size: 18px;
+        line-height: 20px;
+
+        cursor: pointer;
+      }
+
+      #minimizeVoiceBtn:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+
+      /* Cuerpo */
+
+      #voiceBody {
+        padding: 12px 16px;
+      }
+
+      /* Controles */
+
+      .voice-control {
+        margin-bottom: 8px;
+      }
+
+      .voice-control label {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        font-size: 13px;
+
+        margin-bottom: 3px;
+      }
+
+      .voice-control label span {
+        min-width: 35px;
+
+        text-align: right;
+
+        font-weight: bold;
+      }
+
+      .voice-control input[type="range"] {
+        width: 100%;
+
+        cursor: pointer;
+      }
+
+      /* Botón probar */
+
+      #testVoiceBtn {
+        display: block;
+
+        width: 100%;
+
+        margin-top: 10px;
+
+        padding: 8px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background: #ffffff;
+
+        color: #222;
+
+        font-size: 14px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+      }
+
+      #testVoiceBtn:hover {
+        background: #eeeeee;
+      }
+
+      /* Panel minimizado */
+
+      .voice-config.minimized {
+        width: 180px;
+      }
+
+      .voice-config.minimized #voiceBody {
+        display: none;
+      }
+
+      #voiceVariant {
+        width: 100%;
+        padding: 7px 8px;
+        margin-bottom: 3rem;
+
+        border: 1px solid #777;
+        border-radius: 6px;
+
+        background: #222;
+        color: white;
+
+        font-size: 13px;
+
+        cursor: pointer;
+      }
+
+      .voice-config.minimized .voice-header {
+        cursor: move;
+      }
+
+      .voice-title {
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .voice-control {
+        margin-bottom: 8px;
+      }
+
+      .voice-control label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        font-size: 13px;
+        margin-bottom: 3px;
+      }
+
+      .voice-control label span {
+        min-width: 35px;
+        text-align: right;
+        font-weight: bold;
+      }
+
+      .voice-control input[type="range"] {
+        width: 100%;
+        cursor: pointer;
+      }
+
+      #testVoiceBtn {
+        display: block;
+        width: 100%;
+
+        margin-top: 10px;
+        padding: 8px;
+
+        border: none;
+        border-radius: 8px;
+
+        background: #ffffff;
+        color: #222;
+
+        font-size: 14px;
+        font-weight: bold;
+
+        cursor: pointer;
+      }
+
+      #testVoiceBtn:hover {
+        background: #eeeeee;
+      }
+
+      /* 👇 ESTA PARTE ES CLAVE */
+      #lottie-background,
+      #celebration {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        z-index: -2;
+        opacity: 0.2;
+        pointer-events: none;
+      }
+
+      /* Fuerza a los SVG generados por Lottie a ocupar todo */
+      #lottie-background svg,
+      #celebration svg {
+        width: 100vw !important;
+        height: 100vh !important;
+        object-fit: cover !important;
+      }
+
+      /* Fallback para asegurar color uniforme */
+      #lottie-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        /* background: rgba(0, 0, 0, 0.4); */
+        z-index: -1;
+      }
+
+      /* Canvas de confetti */
+      #confettiCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1500;
+      }
+
+      /* Bot ocupa toda la pantalla */
+      #bot {
+        width: 100%;
+        height: 100%;
+      }
+
+      #bot {
+        transform: scale(1.05); /* 50% más grande */
+        transform-origin: center bottom; /* ajusta desde donde crece */
+      }
+
+      /* Texto del bot */
+      #botText {
+        position: fixed;
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Comic Sans MS", "Arial", sans-serif;
+        font-size: 44px;
+        color: #ff477e;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        opacity: 1;
+        z-index: 2000;
+        pointer-events: none;
+        display: inline-block;
+        transition:
+          transform 0.3s ease,
+          opacity 0.3s ease;
+      }
+
+      #botText.bounce {
+        animation: bounce 0.6s ease forwards;
+      }
+
+      @keyframes bounce {
+        0% {
+          transform: scale(0.5);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+        70% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Ventana flotante QR */
+      #qrContainer {
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 320px;
+        background: rgba(0, 0, 0, 0.9);
+        border: 2px solid #666;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: move;
+        padding: 10px;
+      }
+
+      #qrVideo {
+        width: 280px;
+        height: 220px;
+        border: 2px solid lime;
+      }
+
+      /* =====================================================
+   EFECTO MIRA / ESCÁNER QR
+   ===================================================== */
+
+      #qrVideo {
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Capa sobre la cámara */
+      #qrScannerOverlay {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+
+        pointer-events: none;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        transition: opacity 0.3s ease;
+      }
+
+      /* Marco central */
+      .qrScanFrame {
+        position: relative;
+
+        width: 190px;
+        height: 190px;
+      }
+
+      /* Esquinas */
+      .qrCorner {
+        position: absolute;
+        width: 35px;
+        height: 35px;
+
+        border-color: #00ff66;
+        border-style: solid;
+
+        filter: drop-shadow(0 0 5px #00ff66);
+      }
+
+      /* Superior izquierda */
+      .qrCorner.topLeft {
+        top: 0;
+        left: 0;
+
+        border-width: 4px 0 0 4px;
+      }
+
+      /* Superior derecha */
+      .qrCorner.topRight {
+        top: 0;
+        right: 0;
+
+        border-width: 4px 4px 0 0;
+      }
+
+      /* Inferior izquierda */
+      .qrCorner.bottomLeft {
+        bottom: 0;
+        left: 0;
+
+        border-width: 0 0 4px 4px;
+      }
+
+      /* Inferior derecha */
+      .qrCorner.bottomRight {
+        bottom: 0;
+        right: 0;
+
+        border-width: 0 4px 4px 0;
+      }
+
+      /* =====================================================
+   LÁSER
+   ===================================================== */
+
+      .qrLaser {
+        position: absolute;
+
+        left: 0;
+        width: 100%;
+        height: 3px;
+
+        background: #ff1744;
+
+        box-shadow:
+          0 0 5px #ff1744,
+          0 0 10px #ff1744,
+          0 0 20px #ff1744;
+
+        animation: qrLaserScan 2s ease-in-out infinite;
+      }
+
+      @keyframes qrLaserScan {
+        0% {
+          top: 0;
+          opacity: 0.5;
+        }
+
+        50% {
+          opacity: 1;
+        }
+
+        100% {
+          top: calc(100% - 3px);
+          opacity: 0.5;
+        }
+      }
+
+      /* Texto */
+      .qrScanText {
+        position: absolute;
+
+        bottom: 8px;
+
+        padding: 3px 8px;
+
+        border-radius: 5px;
+
+        background: rgba(0, 0, 0, 0.65);
+
+        color: #00ff66;
+
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
+
+        letter-spacing: 2px;
+
+        text-shadow: 0 0 5px #00ff66;
+      }
+
+      /* =====================================================
+   QR DETECTADO
+   ===================================================== */
+
+      #qrScannerOverlay.detected .qrCorner {
+        border-color: #00ff00;
+
+        filter: drop-shadow(0 0 5px #00ff00) drop-shadow(0 0 15px #00ff00);
+
+        animation: qrDetected 0.4s ease;
+      }
+
+      #qrScannerOverlay.detected .qrLaser {
+        background: #00ff00;
+
+        box-shadow:
+          0 0 10px #00ff00,
+          0 0 25px #00ff00;
+
+        animation: none;
+
+        top: 50%;
+      }
+
+      #qrScannerOverlay.detected .qrScanText {
+        color: #00ff00;
+        text-shadow: 0 0 10px #00ff00;
+      }
+
+      @keyframes qrDetected {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.12);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      #qrResult {
+        font-weight: bold;
+        margin-top: 5px;
+      }
+
+      #selectCamsBtn {
+        margin-top: 10px;
+        padding: 5px 10px;
+        border: none;
+        background: limegreen;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      /* Modal de selección de cámaras */
+      #camModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      }
+
+      #camModal .content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 400px;
+      }
+
+      /* Botón rotar */
+      #rotateBtn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 2000;
+        padding: 10px 15px;
+        border-radius: 50%;
+        border: none;
+        background: #4104f5;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Contenedor rotatorio -->
+    <div id="totemWrapper">
+      <div id="lottie-background"></div>
+      <div id="celebration"></div>
+      <div id="lottie-overlay"></div>
+      <div id="bot"></div>
+      <div id="botText"></div>
+      <canvas id="confettiCanvas"></canvas>
+
+      <div id="voiceConfig" class="voice-config">
+        <div id="voiceHeader" class="voice-header">
+          <span>🔊 Configuración de voz</span>
+          <button id="minimizeVoiceBtn" type="button">−</button>
+        </div>
+
+        <div id="voiceBody">
+          <div class="voice-control">
+            <label for="voiceVariant"> Voz </label>
+
+            <select id="voiceVariant">
+              <option value="m1">🎙️ Animador 1</option>
+              <option value="m2">🎙️ Animador 2</option>
+              <option value="m3">🎙️ Animador 3</option>
+              <option value="m4">🎙️ Animador 4</option>
+              <option value="m5">🎙️ Animador 5</option>
+              <option value="m6">🎙️ Animador 6</option>
+              <option value="m7">🎙️ Animador 7</option>
+            </select>
+            <br />
+
+            <label for="voiceSpeed mt-2">
+              Velocidad
+              <span id="voiceSpeedValue">130</span>
+            </label>
+
+            <input
+              type="range"
+              id="voiceSpeed"
+              min="80"
+              max="220"
+              value="130"
+              step="5"
+            />
+          </div>
+
+          <div class="voice-control">
+            <label for="voicePitch">
+              Tono
+              <span id="voicePitchValue">15</span>
+            </label>
+
+            <input
+              type="range"
+              id="voicePitch"
+              min="0"
+              max="30"
+              value="15"
+              step="1"
+            />
+          </div>
+
+          <div class="voice-control">
+            <label for="voiceAmplitude">
+              Volumen
+              <span id="voiceAmplitudeValue">80</span>
+            </label>
+
+            <input
+              type="range"
+              id="voiceAmplitude"
+              min="0"
+              max="100"
+              value="80"
+              step="5"
+            />
+          </div>
+
+          <button id="testVoiceBtn" type="button">▶ Probar voz</button>
+        </div>
+      </div>
+
+      <!-- Ventana QR -->
+      <div id="qrContainer">
+        <div id="qrVideo">
+          <div id="qrScannerOverlay">
+            <div class="qrScanFrame">
+              <div class="qrCorner topLeft"></div>
+              <div class="qrCorner topRight"></div>
+              <div class="qrCorner bottomLeft"></div>
+              <div class="qrCorner bottomRight"></div>
+
+              <div class="qrLaser"></div>
+            </div>
+
+            <div class="qrScanText">ESCANEANDO...</div>
+          </div>
+        </div>
+
+        <div id="qrResult">❌ Activar cámara</div>
+        <button id="selectCamsBtn">Seleccionar Cámaras</button>
+      </div>
+    </div>
+
+    <!-- Botón de rotación -->
+    <button id="rotateBtn">⟳</button>
+
+    <!-- Modal de cámaras -->
+    <div id="camModal">
+      <div class="content">
+        <h3>Seleccionar Cámaras</h3>
+        <div>
+          <label for="qrCamSelect">Cámara QR:</label>
+          <select id="qrCamSelect"></select>
+        </div>
+        <button id="saveCamSelection" style="margin-top: 10px">Guardar</button>
+        <button id="closeCamModal" style="margin-top: 10px; margin-left: 10px">
+          Cerrar
+        </button>
+      </div>
+    </div>
+
+    <!-- Librerías -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Scripts propios -->
+
+    <script src="mespeak/mespeak.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+      // Drag del QR
+      const qrContainer = document.getElementById("qrContainer");
+      let offsetX,
+        offsetY,
+        isDown = false;
+
+      qrContainer.addEventListener("mousedown", (e) => {
+        isDown = true;
+        offsetX = e.clientX - qrContainer.offsetLeft;
+        offsetY = e.clientY - qrContainer.offsetTop;
+      });
+      document.addEventListener("mouseup", () => (isDown = false));
+      document.addEventListener("mousemove", (e) => {
+        if (isDown) {
+          qrContainer.style.left = e.clientX - offsetX + "px";
+          qrContainer.style.top = e.clientY - offsetY + "px";
+        }
+      });
+
+      // Rotar el wrapper completo
+      let rotation = 0;
+      document.getElementById("rotateBtn").onclick = () => {
+        rotation = (rotation + 90) % 360;
+        const wrapper = document.getElementById("totemWrapper");
+        wrapper.style.transform = `rotate(${rotation}deg)`;
+      };
+
+      // Animaciones de fondo
+      lottie.loadAnimation({
+        container: document.getElementById("lottie-background"),
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        path: "./lottie/Sound-Beats.json",
+      });
+
+      lottie.loadAnimation({
+        container: document.getElementById("celebration"),
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        path: "./lottie/Celebration-balloon.json",
+      });
+
+      // ======================================================
+      // PANEL DE CONFIGURACIÓN DE VOZ
+      // ======================================================
+
+      const voiceConfig = document.getElementById("voiceConfig");
+      const voiceHeader = document.getElementById("voiceHeader");
+      const minimizeVoiceBtn = document.getElementById("minimizeVoiceBtn");
+
+      // ---------------- MINIMIZAR ----------------
+
+      minimizeVoiceBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        voiceConfig.classList.toggle("minimized");
+
+        if (voiceConfig.classList.contains("minimized")) {
+          minimizeVoiceBtn.textContent = "+";
+        } else {
+          minimizeVoiceBtn.textContent = "−";
+        }
+      });
+
+      // ---------------- MOVER ----------------
+
+      let voiceDragging = false;
+
+      let voiceOffsetX = 0;
+      let voiceOffsetY = 0;
+
+      voiceHeader.addEventListener("mousedown", (e) => {
+        // Si hizo click sobre el botón minimizar,
+        // no iniciar el arrastre.
+
+        if (e.target === minimizeVoiceBtn) {
+          return;
+        }
+
+        voiceDragging = true;
+
+        const rect = voiceConfig.getBoundingClientRect();
+
+        voiceOffsetX = e.clientX - rect.left;
+        voiceOffsetY = e.clientY - rect.top;
+
+        // Cambiamos de right/top a left/top
+        voiceConfig.style.left = rect.left + "px";
+        voiceConfig.style.top = rect.top + "px";
+        voiceConfig.style.right = "auto";
+      });
+
+      document.addEventListener("mouseup", () => {
+        voiceDragging = false;
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!voiceDragging) return;
+
+        let x = e.clientX - voiceOffsetX;
+        let y = e.clientY - voiceOffsetY;
+
+        // Evitar que desaparezca completamente
+        // fuera de la pantalla.
+
+        const maxX = window.innerWidth - voiceConfig.offsetWidth;
+
+        const maxY = window.innerHeight - voiceConfig.offsetHeight;
+
+        x = Math.max(0, Math.min(x, maxX));
+        y = Math.max(0, Math.min(y, maxY));
+
+        voiceConfig.style.left = x + "px";
+        voiceConfig.style.top = y + "px";
+      });
+    </script>
+  </body>
+</html>

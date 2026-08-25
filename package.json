@@ -1,0 +1,13 @@
+{
+  "name": "totemqr",
+  "version": "1.0.0",
+  "bin": "server.js",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "pkg": {
+    "scripts": [
+      "server.js"
+    ]
+  }
+}
