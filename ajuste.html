@@ -1,0 +1,1831 @@
+<!doctype html>
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Ajuste Video Mesa-1</title>
+
+    <link rel="stylesheet" href="ajuste.css" />
+  </head>
+
+  <body>
+    <div id="app">
+      <!-- =====================================================
+       PREVISUALIZACIÓN
+       ===================================================== -->
+
+      <div id="previewArea">
+        <div id="screen" data-orientation="horizontal">
+          <video
+            id="mesaVideo"
+            autoplay
+            muted
+            loop
+            playsinline
+            style="
+              transform: translate(0%, 0%) scale(1) rotate(0deg);
+              object-position: 50% 50%;
+            "
+          >
+            <source src="videos/mesa-1.mp4" type="video/mp4" />
+
+            Tu navegador no soporta video HTML5.
+          </video>
+        </div>
+      </div>
+
+      <!-- =====================================================
+       PANEL DE CONFIGURACIÓN
+       ===================================================== -->
+
+      <div id="controls">
+        <!-- ===================================================
+         CABECERA
+         =================================================== -->
+
+        <div id="panelHeader">
+          <div class="panelTitle">🎬 <strong>Ajustes</strong></div>
+
+          <div class="panelActions">
+            <button id="minimizeBtn" type="button" title="Minimizar">−</button>
+
+            <button id="closeBtn" type="button" title="Ocultar panel">×</button>
+          </div>
+        </div>
+
+        <!-- ===================================================
+         CONTENIDO
+         =================================================== -->
+
+        <div id="panelContent">
+          <!-- =================================================
+           ORIENTACIÓN
+           ================================================= -->
+
+          <div class="group">
+            <h2>📱 Orientación</h2>
+
+            <div class="buttonRow">
+              <button id="horizontalBtn" class="smallButton" type="button">
+                ↔ Horizontal
+              </button>
+
+              <button id="verticalBtn" class="smallButton" type="button">
+                ↕ Vertical
+              </button>
+            </div>
+          </div>
+
+          <!-- =================================================
+           ROTACIÓN
+           ================================================= -->
+
+          <div class="group">
+            <h2>🔄 Rotación</h2>
+
+            <button id="rotateBtn" class="rotateButton" type="button">
+              ⟳ Rotar 90°
+            </button>
+
+            <div class="rotationValue">
+              Rotación:
+              <span id="rotateValue" class="value">0°</span>
+            </div>
+          </div>
+
+          <!-- =================================================
+           POSICIÓN
+           ================================================= -->
+
+          <div class="accordion">
+            <button class="accordionHeader" type="button">
+              <span>📍 Posición</span>
+
+              <span class="accordionArrow">＋</span>
+            </button>
+
+            <div class="accordionContent">
+              <div class="control">
+                <label>
+                  Posición X
+
+                  <span id="translateXValue" class="value"> 0% </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="translateX"
+                  min="-100"
+                  max="100"
+                  value="0"
+                  step="1"
+                />
+              </div>
+
+              <div class="control">
+                <label>
+                  Posición Y
+
+                  <span id="translateYValue" class="value"> 0% </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="translateY"
+                  min="-100"
+                  max="100"
+                  value="0"
+                  step="1"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- =================================================
+           ZOOM
+           ================================================= -->
+
+          <div class="accordion">
+            <button class="accordionHeader" type="button">
+              <span>🔍 Zoom</span>
+
+              <span class="accordionArrow">＋</span>
+            </button>
+
+            <div class="accordionContent">
+              <div class="control">
+                <label>
+                  Escala
+
+                  <span id="scaleValue" class="value"> 1.00 </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="scale"
+                  min="0.3"
+                  max="3"
+                  value="1"
+                  step="0.01"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- =================================================
+           ENCUADRE
+           ================================================= -->
+
+          <div class="accordion">
+            <button class="accordionHeader" type="button">
+              <span>🎯 Encuadre</span>
+
+              <span class="accordionArrow">＋</span>
+            </button>
+
+            <div class="accordionContent">
+              <div class="control">
+                <label>
+                  Horizontal
+
+                  <span id="objectXValue" class="value"> 50% </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="objectX"
+                  min="0"
+                  max="100"
+                  value="50"
+                  step="1"
+                />
+              </div>
+
+              <div class="control">
+                <label>
+                  Vertical
+
+                  <span id="objectYValue" class="value"> 50% </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="objectY"
+                  min="0"
+                  max="100"
+                  value="50"
+                  step="1"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- =================================================
+           IMAGEN
+           ================================================= -->
+
+          <div class="accordion">
+            <button class="accordionHeader" type="button">
+              <span>☀️ Imagen</span>
+
+              <span class="accordionArrow">＋</span>
+            </button>
+
+            <div class="accordionContent">
+              <div class="control">
+                <label>
+                  Brillo
+
+                  <span id="brightnessValue" class="value"> 1.00 </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="brightness"
+                  min="0"
+                  max="2"
+                  value="1"
+                  step="0.01"
+                />
+              </div>
+
+              <div class="control">
+                <label>
+                  Contraste
+
+                  <span id="contrastValue" class="value"> 1.00 </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="contrast"
+                  min="0"
+                  max="2"
+                  value="1"
+                  step="0.01"
+                />
+              </div>
+
+              <div class="control">
+                <label>
+                  Saturación
+
+                  <span id="saturateValue" class="value"> 1.00 </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="saturate"
+                  min="0"
+                  max="2"
+                  value="1"
+                  step="0.01"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- =================================================
+           AUDIO
+           ================================================= -->
+
+          <div class="accordion">
+            <button class="accordionHeader" type="button">
+              <span>🔊 Audio</span>
+
+              <span class="accordionArrow">＋</span>
+            </button>
+
+            <div class="accordionContent">
+              <button id="audioBtn" class="audioButton" type="button">
+                🔇 Activar audio
+              </button>
+
+              <div class="control">
+                <label>
+                  Volumen
+
+                  <span id="volumeValue" class="value"> 100% </span>
+                </label>
+
+                <input
+                  type="range"
+                  id="volume"
+                  min="0"
+                  max="1"
+                  value="1"
+                  step="0.01"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- =================================================
+           ACCIONES
+           ================================================= -->
+
+          <div class="group">
+            <button id="resetBtn" class="resetButton" type="button">
+              🔄 Restablecer
+            </button>
+
+            <button id="copyBtn" class="copyButton" type="button">
+              📋 Copiar CSS
+            </button>
+
+            <div id="saved"></div>
+          </div>
+
+          <!-- =================================================
+           CSS GENERADO
+           ================================================= -->
+
+          <div class="accordion">
+            <button class="accordionHeader" type="button">
+              <span>📄 mesaVideo.css</span>
+
+              <span class="accordionArrow">＋</span>
+            </button>
+
+            <div class="accordionContent">
+              <textarea id="cssOutput" readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+       BOTÓN RESTAURAR PANEL DE CONFIGURACIÓN
+       
+       IMPORTANTE:
+       Está FUERA de #controls para que pueda seguir
+       visible cuando el panel está oculto.
+       ===================================================== -->
+
+      <button
+        id="restoreBtn"
+        type="button"
+        title="Mostrar panel de configuración"
+      >
+        ⚙️
+      </button>
+
+      <!-- =====================================================
+       PANEL ADMINISTRADOR DE VIDEOS
+       ===================================================== -->
+
+      <div id="videoManager">
+        <!-- CABECERA -->
+
+        <div id="videoManagerHeader">
+          <div class="videoManagerTitle">🎬 <strong>Archivos</strong></div>
+
+          <div class="videoManagerActions">
+            <button id="videoManagerMinimize" type="button" title="Minimizar">
+              −
+            </button>
+
+            <button id="videoManagerClose" type="button" title="Ocultar">
+              ×
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTENIDO -->
+
+        <div id="videoManagerContent">
+          <!-- =================================================
+           INTRO
+           ================================================= -->
+
+          <div class="videoSection">
+            <div class="videoSectionTitle">🎞️ INTRO</div>
+
+            <div id="introVideoContainer">
+              <div class="videoEmpty">Cargando...</div>
+            </div>
+
+            <button id="addIntroBtn" class="videoAddButton" type="button">
+              ＋ Subir INTRO
+            </button>
+          </div>
+
+          <!-- =================================================
+           MESAS
+           ================================================= -->
+
+          <div class="videoSection">
+            <div class="videoSectionTitle">
+              🪑 MESAS
+
+              <span id="mesaCount"> 0 </span>
+            </div>
+
+            <div id="mesaVideosContainer">
+              <div class="videoEmpty">Cargando...</div>
+            </div>
+
+            <button id="addMesaBtn" class="videoAddButton" type="button">
+              ＋ Agregar video de mesa
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+       BOTÓN RESTAURAR ADMINISTRADOR DE VIDEOS
+       ===================================================== -->
+
+      <button
+        id="restoreVideoManager"
+        type="button"
+        title="Mostrar administrador de videos"
+      >
+        🎬
+      </button>
+
+      <!-- =====================================================
+       INPUTS DE ARCHIVOS
+       ===================================================== -->
+
+      <input
+        type="file"
+        id="introFileInput"
+        accept="video/mp4,video/*"
+        hidden
+      />
+
+      <input type="file" id="mesaFileInput" accept="video/mp4,video/*" hidden />
+
+      <!-- =====================================================
+       MODAL REPRODUCTOR
+       ===================================================== -->
+
+      <div id="videoModal">
+        <div id="videoModalBox">
+          <button id="videoModalClose" type="button">×</button>
+
+          <div id="videoModalTitle">Video</div>
+
+          <video id="videoModalPlayer" controls playsinline></video>
+        </div>
+      </div>
+
+      <!-- =====================================================
+       MODAL NÚMERO DE MESA
+       ===================================================== -->
+
+      <div id="mesaNumberModal">
+        <div id="mesaNumberBox">
+          <h2>🪑 Nueva mesa</h2>
+
+          <p>Ingresá el número de mesa:</p>
+
+          <input
+            type="number"
+            id="mesaNumberInput"
+            min="1"
+            step="1"
+            placeholder="Ej: 01"
+          />
+
+          <div class="mesaNumberButtons">
+            <button id="mesaNumberCancel" type="button">Cancelar</button>
+
+            <button id="mesaNumberContinue" type="button">Continuar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+     JAVASCRIPT
+     ===================================================== -->
+
+    <script>
+      /* =====================================================
+           ELEMENTOS PRINCIPALES
+           ===================================================== */
+
+      const video = document.getElementById("mesaVideo");
+
+      const screen = document.getElementById("screen");
+
+      const translateX = document.getElementById("translateX");
+
+      const translateY = document.getElementById("translateY");
+
+      const scale = document.getElementById("scale");
+
+      const objectX = document.getElementById("objectX");
+
+      const objectY = document.getElementById("objectY");
+
+      const brightness = document.getElementById("brightness");
+
+      const contrast = document.getElementById("contrast");
+
+      const saturate = document.getElementById("saturate");
+
+      const volume = document.getElementById("volume");
+
+      /* =====================================================
+           VALORES VISUALES
+           ===================================================== */
+
+      const translateXValue = document.getElementById("translateXValue");
+
+      const translateYValue = document.getElementById("translateYValue");
+
+      const scaleValue = document.getElementById("scaleValue");
+
+      const objectXValue = document.getElementById("objectXValue");
+
+      const objectYValue = document.getElementById("objectYValue");
+
+      const brightnessValue = document.getElementById("brightnessValue");
+
+      const contrastValue = document.getElementById("contrastValue");
+
+      const saturateValue = document.getElementById("saturateValue");
+
+      const volumeValue = document.getElementById("volumeValue");
+
+      const rotateValue = document.getElementById("rotateValue");
+
+      const cssOutput = document.getElementById("cssOutput");
+
+      const saved = document.getElementById("saved");
+
+      /* =====================================================
+           PANEL CONFIGURACIÓN
+           ===================================================== */
+
+      const controls = document.getElementById("controls");
+
+      const panelHeader = document.getElementById("panelHeader");
+
+      const minimizeBtn = document.getElementById("minimizeBtn");
+
+      const closeBtn = document.getElementById("closeBtn");
+
+      const restoreBtn = document.getElementById("restoreBtn");
+
+      /* =====================================================
+           ROTACIÓN
+           ===================================================== */
+
+      let rotation = 0;
+
+      /* =====================================================
+           CONFIGURACIÓN DEFAULT
+           ===================================================== */
+
+      const defaultConfig = {
+        translateX: 0,
+
+        translateY: 0,
+
+        scale: 1,
+
+        objectX: 50,
+
+        objectY: 50,
+
+        rotate: 0,
+
+        brightness: 1,
+
+        contrast: 1,
+
+        saturate: 1,
+
+        volume: 1,
+
+        muted: true,
+
+        orientation: "horizontal",
+      };
+
+      /* =====================================================
+           OBTENER CONFIGURACIÓN
+           ===================================================== */
+
+      function getConfig() {
+        return {
+          translateX: Number(translateX.value),
+
+          translateY: Number(translateY.value),
+
+          scale: Number(scale.value),
+
+          objectX: Number(objectX.value),
+
+          objectY: Number(objectY.value),
+
+          rotate: rotation,
+
+          brightness: Number(brightness.value),
+
+          contrast: Number(contrast.value),
+
+          saturate: Number(saturate.value),
+
+          volume: Number(volume.value),
+
+          muted: video.muted,
+
+          orientation: screen.dataset.orientation || "horizontal",
+        };
+      }
+
+      /* =====================================================
+           GUARDAR
+           ===================================================== */
+
+      function saveConfig() {
+        const config = getConfig();
+
+        localStorage.setItem("mesaVideoConfig", JSON.stringify(config));
+
+        saved.textContent = "✓ Configuración guardada";
+      }
+
+      /* =====================================================
+           ORIENTACIÓN
+           ===================================================== */
+
+      function setOrientation(orientation, guardar = true) {
+        screen.dataset.orientation = orientation;
+
+        if (orientation === "vertical") {
+          screen.style.width = "56.25vh";
+
+          screen.style.height = "100%";
+        } else {
+          screen.style.width = "100%";
+
+          screen.style.height = "100%";
+        }
+
+        if (guardar) {
+          saveConfig();
+        }
+      }
+
+      /* =====================================================
+           APLICAR CONFIGURACIÓN
+           ===================================================== */
+
+      function applyConfig(config) {
+        translateX.value = config.translateX ?? 0;
+
+        translateY.value = config.translateY ?? 0;
+
+        scale.value = config.scale ?? 1;
+
+        objectX.value = config.objectX ?? 50;
+
+        objectY.value = config.objectY ?? 50;
+
+        rotation = Number(config.rotate ?? 0);
+
+        rotation = ((rotation % 360) + 360) % 360;
+
+        brightness.value = config.brightness ?? 1;
+
+        contrast.value = config.contrast ?? 1;
+
+        saturate.value = config.saturate ?? 1;
+
+        volume.value = config.volume ?? 1;
+
+        video.volume = config.volume ?? 1;
+
+        video.muted = config.muted ?? true;
+
+        setOrientation(config.orientation || "horizontal", false);
+
+        updateVideo();
+      }
+
+      /* =====================================================
+           ACTUALIZAR VIDEO
+           ===================================================== */
+
+      function updateVideo() {
+        const x = translateX.value;
+
+        const y = translateY.value;
+
+        const s = scale.value;
+
+        const ox = objectX.value;
+
+        const oy = objectY.value;
+
+        video.style.transform =
+          `translate(${x}%, ${y}%) ` +
+          `scale(${s}) ` +
+          `rotate(${rotation}deg)`;
+
+        video.style.objectPosition = `${ox}% ${oy}%`;
+
+        video.style.filter =
+          `brightness(${brightness.value}) ` +
+          `contrast(${contrast.value}) ` +
+          `saturate(${saturate.value})`;
+
+        translateXValue.textContent = `${x}%`;
+
+        translateYValue.textContent = `${y}%`;
+
+        scaleValue.textContent = Number(s).toFixed(2);
+
+        objectXValue.textContent = `${ox}%`;
+
+        objectYValue.textContent = `${oy}%`;
+
+        rotateValue.textContent = `${rotation}°`;
+
+        brightnessValue.textContent = Number(brightness.value).toFixed(2);
+
+        contrastValue.textContent = Number(contrast.value).toFixed(2);
+
+        saturateValue.textContent = Number(saturate.value).toFixed(2);
+
+        volumeValue.textContent = `${Math.round(video.volume * 100)}%`;
+
+        updateCSS();
+
+        saveConfig();
+      }
+
+      /* =====================================================
+           SLIDERS
+           ===================================================== */
+
+      translateX.addEventListener("input", updateVideo);
+
+      translateY.addEventListener("input", updateVideo);
+
+      scale.addEventListener("input", updateVideo);
+
+      objectX.addEventListener("input", updateVideo);
+
+      objectY.addEventListener("input", updateVideo);
+
+      brightness.addEventListener("input", updateVideo);
+
+      contrast.addEventListener("input", updateVideo);
+
+      saturate.addEventListener("input", updateVideo);
+
+      /* =====================================================
+           VOLUMEN
+           ===================================================== */
+
+      volume.addEventListener("input", () => {
+        video.volume = Number(volume.value);
+
+        updateVideo();
+      });
+
+      /* =====================================================
+           ROTAR 90°
+           ===================================================== */
+
+      document.getElementById("rotateBtn").addEventListener("click", () => {
+        rotation += 90;
+
+        if (rotation >= 360) {
+          rotation = 0;
+        }
+
+        updateVideo();
+      });
+
+      /* =====================================================
+           ORIENTACIÓN
+           ===================================================== */
+
+      document.getElementById("horizontalBtn").addEventListener("click", () => {
+        setOrientation("horizontal");
+      });
+
+      document.getElementById("verticalBtn").addEventListener("click", () => {
+        setOrientation("vertical");
+      });
+
+      /* =====================================================
+           AUDIO
+           ===================================================== */
+
+      const audioBtn = document.getElementById("audioBtn");
+
+      function updateAudioButton() {
+        if (video.muted) {
+          audioBtn.textContent = "🔇 Activar audio";
+        } else {
+          audioBtn.textContent = "🔊 Silenciar audio";
+        }
+      }
+
+      audioBtn.addEventListener("click", () => {
+        video.muted = !video.muted;
+
+        if (!video.muted) {
+          video.play();
+        }
+
+        updateAudioButton();
+
+        saveConfig();
+      });
+
+      /* =====================================================
+           ACORDEONES
+           ===================================================== */
+
+      document.querySelectorAll(".accordionHeader").forEach((header) => {
+        header.addEventListener("click", () => {
+          const accordion = header.parentElement;
+
+          const content = accordion.querySelector(".accordionContent");
+
+          const arrow = header.querySelector(".accordionArrow");
+
+          const isOpen = accordion.classList.contains("open");
+
+          document.querySelectorAll(".accordion.open").forEach((item) => {
+            item.classList.remove("open");
+
+            const itemContent = item.querySelector(".accordionContent");
+
+            const itemArrow = item.querySelector(".accordionArrow");
+
+            itemContent.style.maxHeight = "0px";
+
+            itemArrow.textContent = "＋";
+          });
+
+          if (!isOpen) {
+            accordion.classList.add("open");
+
+            content.style.maxHeight = content.scrollHeight + "px";
+
+            arrow.textContent = "−";
+          }
+        });
+      });
+
+      /* =====================================================
+           RESTABLECER
+           ===================================================== */
+
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        if (!confirm("¿Restablecer todos los valores?")) {
+          return;
+        }
+
+        applyConfig(defaultConfig);
+      });
+
+      /* =====================================================
+           GENERAR CSS
+           ===================================================== */
+
+      function updateCSS() {
+        const config = getConfig();
+
+        const css = `/* =====================================================
+      
+
+      CONFIGURACIÓN DEL VIDEO MESA-1
+      Generado desde ajuste.html
+      ===================================================== */
+
+      #mesaVideo {
+
+      position: absolute;
+
+      top: 0;
+      left: 0;
+
+      width: 100vw;
+      height: 100vh;
+
+      object-fit: cover;
+
+      object-position:
+      ${config.objectX}% ${config.objectY}%;
+
+      transform:
+      translate(
+      ${config.translateX}%,
+      ${config.translateY}%
+      )
+      scale(${config.scale})
+      rotate(${config.rotate}deg);
+
+      transform-origin:
+      center center;
+
+      filter:
+      brightness(${config.brightness})
+      contrast(${config.contrast})
+      saturate(${config.saturate});
+
+      pointer-events: none;
+
+      z-index: -2;
+
+      display: none;
+      }`;
+
+        cssOutput.value = css;
+      }
+
+      /* =====================================================
+           COPIAR CSS
+           ===================================================== */
+
+      document.getElementById("copyBtn").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(cssOutput.value);
+
+          saved.textContent = "✓ CSS copiado al portapapeles";
+        } catch (error) {
+          cssOutput.select();
+
+          document.execCommand("copy");
+
+          saved.textContent = "✓ CSS copiado";
+        }
+      });
+
+      /* =====================================================
+           MINIMIZAR PANEL CONFIGURACIÓN
+           ===================================================== */
+
+      minimizeBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        controls.classList.toggle("minimized");
+
+        if (controls.classList.contains("minimized")) {
+          minimizeBtn.textContent = "+";
+
+          minimizeBtn.title = "Restaurar";
+        } else {
+          minimizeBtn.textContent = "−";
+
+          minimizeBtn.title = "Minimizar";
+        }
+      });
+
+      /* =====================================================
+           OCULTAR PANEL CONFIGURACIÓN
+           ===================================================== */
+
+      closeBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        controls.classList.add("hidden");
+
+        restoreBtn.style.display = "block";
+      });
+
+      /* =====================================================
+           RESTAURAR PANEL CONFIGURACIÓN
+
+           IMPORTANTE:
+           restoreBtn está fuera de #controls.
+           ===================================================== */
+
+      restoreBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        controls.classList.remove("hidden");
+
+        restoreBtn.style.display = "none";
+      });
+
+      /* =====================================================
+           ARRASTRAR PANEL CONFIGURACIÓN
+           ===================================================== */
+
+      let dragging = false;
+
+      let dragOffsetX = 0;
+
+      let dragOffsetY = 0;
+
+      panelHeader.addEventListener("mousedown", (event) => {
+        if (event.target.closest("button")) {
+          return;
+        }
+
+        dragging = true;
+
+        const rect = controls.getBoundingClientRect();
+
+        dragOffsetX = event.clientX - rect.left;
+
+        dragOffsetY = event.clientY - rect.top;
+
+        controls.style.left = rect.left + "px";
+
+        controls.style.top = rect.top + "px";
+
+        controls.style.right = "auto";
+
+        panelHeader.style.cursor = "grabbing";
+      });
+
+      document.addEventListener("mousemove", (event) => {
+        if (!dragging) {
+          return;
+        }
+
+        let x = event.clientX - dragOffsetX;
+
+        let y = event.clientY - dragOffsetY;
+
+        const maxX = window.innerWidth - controls.offsetWidth;
+
+        const maxY = window.innerHeight - controls.offsetHeight;
+
+        x = Math.max(0, Math.min(x, maxX));
+
+        y = Math.max(0, Math.min(y, maxY));
+
+        controls.style.left = x + "px";
+
+        controls.style.top = y + "px";
+      });
+
+      document.addEventListener("mouseup", () => {
+        if (!dragging) {
+          return;
+        }
+
+        dragging = false;
+
+        panelHeader.style.cursor = "move";
+      });
+
+      /* =====================================================
+           CARGAR CONFIGURACIÓN
+           ===================================================== */
+
+      function loadConfig() {
+        const savedConfig = localStorage.getItem("mesaVideoConfig");
+
+        if (!savedConfig) {
+          applyConfig(defaultConfig);
+
+          return;
+        }
+
+        try {
+          const config = JSON.parse(savedConfig);
+
+          applyConfig(config);
+        } catch (error) {
+          console.warn("No se pudo cargar configuración:", error);
+
+          applyConfig(defaultConfig);
+        }
+      }
+
+      /* =====================================================
+           ADMINISTRADOR DE VIDEOS
+           ===================================================== */
+
+      const videoManager = document.getElementById("videoManager");
+
+      const videoManagerHeader = document.getElementById("videoManagerHeader");
+
+      const videoManagerMinimize = document.getElementById(
+        "videoManagerMinimize",
+      );
+
+      const videoManagerClose = document.getElementById("videoManagerClose");
+
+      const restoreVideoManager = document.getElementById(
+        "restoreVideoManager",
+      );
+
+      const introVideoContainer = document.getElementById(
+        "introVideoContainer",
+      );
+
+      const mesaVideosContainer = document.getElementById(
+        "mesaVideosContainer",
+      );
+
+      const mesaCount = document.getElementById("mesaCount");
+
+      const addIntroBtn = document.getElementById("addIntroBtn");
+
+      const addMesaBtn = document.getElementById("addMesaBtn");
+
+      const introFileInput = document.getElementById("introFileInput");
+
+      const mesaFileInput = document.getElementById("mesaFileInput");
+
+      /* =====================================================
+           MODAL VIDEO
+           ===================================================== */
+
+      const videoModal = document.getElementById("videoModal");
+
+      const videoModalPlayer = document.getElementById("videoModalPlayer");
+
+      const videoModalTitle = document.getElementById("videoModalTitle");
+
+      const videoModalClose = document.getElementById("videoModalClose");
+
+      /* =====================================================
+           MODAL MESA
+           ===================================================== */
+
+      const mesaNumberModal = document.getElementById("mesaNumberModal");
+
+      const mesaNumberInput = document.getElementById("mesaNumberInput");
+
+      const mesaNumberCancel = document.getElementById("mesaNumberCancel");
+
+      const mesaNumberContinue = document.getElementById("mesaNumberContinue");
+
+      /* =====================================================
+           CARGAR LISTA DE VIDEOS
+           ===================================================== */
+
+      async function loadVideos() {
+        try {
+          const response = await fetch("/api/videos");
+
+          if (!response.ok) {
+            throw new Error("No se pudo obtener la lista");
+          }
+
+          const data = await response.json();
+
+          renderIntro(data.intro);
+
+          renderMesas(data.mesas);
+        } catch (error) {
+          console.error("Error cargando videos:", error);
+
+          introVideoContainer.innerHTML = `<div class="videoEmpty">
+                No se pudo cargar la lista de videos.
+              </div>`;
+
+          mesaVideosContainer.innerHTML = `<div class="videoEmpty">
+                No se pudo cargar la lista de videos.
+              </div>`;
+        }
+      }
+
+      /* =====================================================
+           INTRO
+           ===================================================== */
+
+      function renderIntro(existe) {
+        if (!existe) {
+          introVideoContainer.innerHTML = `<div class="videoEmpty">
+                No hay video INTRO configurado.
+              </div>`;
+
+          return;
+        }
+
+        introVideoContainer.innerHTML = `
+
+            <div class="videoCard">
+
+              <div class="videoCardName">
+                intro.mp4
+              </div>
+
+              <div class="videoButtons">
+
+                <button
+                  class="videoPlayButton"
+                  type="button"
+                  onclick="playManagedVideo(
+                    '/videos/intro.mp4',
+                    'INTRO'
+                  )"
+                >
+                  ▶ Ver
+                </button>
+
+                <button
+                  class="videoDeleteButton"
+                  type="button"
+                  onclick="deleteManagedVideo('intro')"
+                >
+                  🗑
+                </button>
+
+              </div>
+
+            </div>
+
+          `;
+      }
+
+      /* =====================================================
+           MESAS
+           ===================================================== */
+
+      function renderMesas(mesas) {
+        mesaVideosContainer.innerHTML = "";
+
+        mesaCount.textContent = `${mesas.length}`;
+
+        if (!mesas.length) {
+          mesaVideosContainer.innerHTML = `<div class="videoEmpty">
+                No hay videos de mesas.
+              </div>`;
+
+          return;
+        }
+
+        mesas.forEach((mesa) => {
+          const card = document.createElement("div");
+
+          card.className = "videoCard";
+
+          card.innerHTML = `
+
+                <div class="videoCardName">
+                  Mesa ${mesa}
+                </div>
+
+                <div class="videoButtons">
+
+                  <button
+                    class="videoPlayButton"
+                    type="button"
+                    onclick="playManagedVideo(
+                      '/videos/mesa-${mesa}.mp4',
+                      'Mesa ${mesa}'
+                    )"
+                  >
+                    ▶ Ver
+                  </button>
+
+                  <button
+                    class="videoDeleteButton"
+                    type="button"
+                    onclick="deleteManagedVideo(${mesa})"
+                  >
+                    🗑
+                  </button>
+
+                </div>
+
+              `;
+
+          mesaVideosContainer.appendChild(card);
+        });
+      }
+
+      /* =====================================================
+           REPRODUCIR VIDEO
+           ===================================================== */
+
+      function playManagedVideo(source, title) {
+        videoModalTitle.textContent = `🎬 ${title}`;
+
+        videoModal.style.display = "flex";
+
+        videoModalPlayer.pause();
+
+        /*
+         * Cache busting
+         */
+
+        const sourceActualizada = `${source}${
+          source.includes("?") ? "&" : "?"
+        }v=${Date.now()}`;
+
+        videoModalPlayer.src = sourceActualizada;
+
+        videoModalPlayer.load();
+
+        videoModalPlayer.play().catch((error) => {
+          console.warn("No se pudo iniciar automáticamente:", error);
+        });
+      }
+
+      /* =====================================================
+           CERRAR MODAL VIDEO
+           ===================================================== */
+
+      function closeVideoModal() {
+        videoModalPlayer.pause();
+
+        videoModalPlayer.removeAttribute("src");
+
+        videoModalPlayer.load();
+
+        videoModal.style.display = "none";
+      }
+
+      videoModalClose.addEventListener("click", closeVideoModal);
+
+      videoModal.addEventListener("click", (event) => {
+        if (event.target === videoModal) {
+          closeVideoModal();
+        }
+      });
+
+      /* =====================================================
+           SUBIR INTRO
+           ===================================================== */
+
+      addIntroBtn.addEventListener("click", () => {
+        introFileInput.value = "";
+
+        introFileInput.click();
+      });
+
+      function changeIntroVideo() {
+        introFileInput.value = "";
+
+        introFileInput.click();
+      }
+
+      introFileInput.addEventListener("change", async () => {
+        const file = introFileInput.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        await uploadVideo(file, "intro");
+      });
+
+      /* =====================================================
+           AGREGAR MESA
+           ===================================================== */
+
+      addMesaBtn.addEventListener("click", () => {
+        mesaNumberInput.value = "";
+
+        mesaNumberModal.style.display = "flex";
+
+        setTimeout(() => {
+          mesaNumberInput.focus();
+        }, 100);
+      });
+
+      /* =====================================================
+           CANCELAR MESA
+           ===================================================== */
+
+      mesaNumberCancel.addEventListener("click", () => {
+        mesaNumberModal.style.display = "none";
+      });
+
+      /* =====================================================
+           CONTINUAR MESA
+           ===================================================== */
+
+      mesaNumberContinue.addEventListener("click", () => {
+        const numero = parseInt(mesaNumberInput.value, 10);
+
+        if (!Number.isInteger(numero) || numero < 1) {
+          alert("Ingresá un número de mesa válido.");
+
+          return;
+        }
+
+        mesaFileInput.dataset.mesa = numero;
+
+        mesaNumberModal.style.display = "none";
+
+        mesaFileInput.value = "";
+
+        mesaFileInput.click();
+      });
+
+      /* =====================================================
+           CAMBIAR VIDEO DE MESA
+           ===================================================== */
+
+      function changeMesaVideo(mesa) {
+        mesaFileInput.dataset.mesa = mesa;
+
+        mesaFileInput.value = "";
+
+        mesaFileInput.click();
+      }
+
+      mesaFileInput.addEventListener("change", async () => {
+        const file = mesaFileInput.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        const mesa = Number(mesaFileInput.dataset.mesa);
+
+        await uploadVideo(file, mesa);
+      });
+
+      /* =====================================================
+           SUBIR VIDEO
+           ===================================================== */
+
+      async function uploadVideo(file, destino) {
+        if (!file) {
+          alert("No se seleccionó ningún video.");
+
+          return;
+        }
+
+        if (!file.type.startsWith("video/")) {
+          alert("El archivo seleccionado no parece ser un video.");
+
+          return;
+        }
+
+        const esIntro = destino === "intro";
+
+        let numeroMesa = null;
+
+        if (!esIntro) {
+          numeroMesa = Number(destino);
+
+          if (!Number.isInteger(numeroMesa) || numeroMesa < 1) {
+            alert("Número de mesa inválido.");
+
+            return;
+          }
+        }
+
+        const nombre = esIntro ? "intro.mp4" : `mesa-${numeroMesa}.mp4`;
+
+        const formData = new FormData();
+
+        formData.append("video", file);
+
+        formData.append("tipo", esIntro ? "intro" : "mesa");
+
+        if (!esIntro) {
+          formData.append("mesa", String(numeroMesa));
+        }
+
+        try {
+          const response = await fetch("/api/videos/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.error || "No se pudo subir el video.");
+          }
+
+          alert(`✓ Video guardado correctamente:\n\n${nombre}`);
+
+          await loadVideos();
+        } catch (error) {
+          console.error(error);
+
+          alert("Error al subir el video:\n\n" + error.message);
+        }
+      }
+
+      /* =====================================================
+           ELIMINAR VIDEO
+           ===================================================== */
+
+      async function deleteManagedVideo(destino) {
+        const nombre =
+          destino === "intro" ? "intro.mp4" : `mesa-${Number(destino)}.mp4`;
+
+        if (
+          !confirm(
+            `¿Eliminar ${nombre}?\n\n` + "Esta acción no se puede deshacer.",
+          )
+        ) {
+          return;
+        }
+
+        try {
+          const response = await fetch("/api/videos/delete", {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              nombre,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.error || "No se pudo eliminar.");
+          }
+
+          await loadVideos();
+        } catch (error) {
+          console.error(error);
+
+          alert("Error al eliminar:\n" + error.message);
+        }
+      }
+
+      /* =====================================================
+           ARRASTRAR ADMINISTRADOR DE VIDEOS
+           ===================================================== */
+
+      let videoManagerDragging = false;
+
+      let videoManagerOffsetX = 0;
+
+      let videoManagerOffsetY = 0;
+
+      videoManagerHeader.addEventListener("mousedown", (event) => {
+        if (event.target.closest("button")) {
+          return;
+        }
+
+        videoManagerDragging = true;
+
+        const rect = videoManager.getBoundingClientRect();
+
+        videoManagerOffsetX = event.clientX - rect.left;
+
+        videoManagerOffsetY = event.clientY - rect.top;
+
+        videoManager.style.left = rect.left + "px";
+
+        videoManager.style.top = rect.top + "px";
+
+        videoManager.style.right = "auto";
+
+        videoManagerHeader.style.cursor = "grabbing";
+      });
+
+      document.addEventListener("mousemove", (event) => {
+        if (!videoManagerDragging) {
+          return;
+        }
+
+        let x = event.clientX - videoManagerOffsetX;
+
+        let y = event.clientY - videoManagerOffsetY;
+
+        const maxX = window.innerWidth - videoManager.offsetWidth;
+
+        const maxY = window.innerHeight - videoManager.offsetHeight;
+
+        x = Math.max(0, Math.min(x, maxX));
+
+        y = Math.max(0, Math.min(y, maxY));
+
+        videoManager.style.left = x + "px";
+
+        videoManager.style.top = y + "px";
+      });
+
+      document.addEventListener("mouseup", () => {
+        if (!videoManagerDragging) {
+          return;
+        }
+
+        videoManagerDragging = false;
+
+        videoManagerHeader.style.cursor = "move";
+      });
+
+      /* =====================================================
+           MINIMIZAR ADMINISTRADOR
+           ===================================================== */
+
+      videoManagerMinimize.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        videoManager.classList.toggle("minimized");
+
+        if (videoManager.classList.contains("minimized")) {
+          videoManagerMinimize.textContent = "+";
+
+          videoManagerMinimize.title = "Restaurar";
+        } else {
+          videoManagerMinimize.textContent = "−";
+
+          videoManagerMinimize.title = "Minimizar";
+        }
+      });
+
+      /* =====================================================
+           OCULTAR ADMINISTRADOR
+           ===================================================== */
+
+      videoManagerClose.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        videoManager.classList.add("hidden");
+
+        restoreVideoManager.style.display = "block";
+      });
+
+      /* =====================================================
+           RESTAURAR ADMINISTRADOR
+           ===================================================== */
+
+      restoreVideoManager.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        videoManager.classList.remove("hidden");
+
+        restoreVideoManager.style.display = "none";
+      });
+
+      /* =====================================================
+           ESCAPE
+           ===================================================== */
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          if (videoModal.style.display === "flex") {
+            closeVideoModal();
+          }
+
+          if (mesaNumberModal.style.display === "flex") {
+            mesaNumberModal.style.display = "none";
+          }
+        }
+      });
+
+      /* =====================================================
+           INICIALIZAR
+           ===================================================== */
+
+      loadConfig();
+
+      updateAudioButton();
+
+      video.play().catch(() => {
+        console.log("El navegador requiere interacción para reproducir.");
+      });
+
+      /* =====================================================
+           CARGAR VIDEOS
+           ===================================================== */
+
+      loadVideos();
+
+      /* =====================================================
+   DIAGNÓSTICO INICIAL
+   ===================================================== */
+
+      function diagnosticoInicial() {
+        console.log("==============================================");
+        console.log("🎬 DIAGNÓSTICO AJUSTE VIDEO");
+        console.log("==============================================");
+
+        console.log("📐 VISTA / ORIENTACIÓN");
+        console.log(
+          "  screen.dataset.orientation:",
+          screen.dataset.orientation,
+        );
+
+        console.log("  screen width:", screen.offsetWidth + "px");
+
+        console.log("  screen height:", screen.offsetHeight + "px");
+
+        console.log("  screen rect:", screen.getBoundingClientRect());
+
+        console.log("----------------------------------------------");
+
+        console.log("🎥 VIDEO");
+
+        console.log("  video src:", video.currentSrc || video.src);
+
+        console.log("  video width atributo:", video.getAttribute("width"));
+
+        console.log("  video height atributo:", video.getAttribute("height"));
+
+        console.log("  video videoWidth:", video.videoWidth);
+
+        console.log("  video videoHeight:", video.videoHeight);
+
+        console.log("  video offsetWidth:", video.offsetWidth);
+
+        console.log("  video offsetHeight:", video.offsetHeight);
+
+        console.log(
+          "  video natural ratio:",
+          video.videoWidth && video.videoHeight
+            ? (video.videoWidth / video.videoHeight).toFixed(3)
+            : "no disponible",
+        );
+
+        console.log("----------------------------------------------");
+
+        console.log("🎨 ESTILOS APLICADOS AL VIDEO");
+
+        const estilos = window.getComputedStyle(video);
+
+        console.log("  position:", estilos.position);
+
+        console.log("  width:", estilos.width);
+
+        console.log("  height:", estilos.height);
+
+        console.log("  top:", estilos.top);
+
+        console.log("  left:", estilos.left);
+
+        console.log("  object-fit:", estilos.objectFit);
+
+        console.log("  object-position:", estilos.objectPosition);
+
+        console.log("  transform:", estilos.transform);
+
+        console.log("  transform-origin:", estilos.transformOrigin);
+
+        console.log("  filter:", estilos.filter);
+
+        console.log("  z-index:", estilos.zIndex);
+
+        console.log("  display:", estilos.display);
+
+        console.log("----------------------------------------------");
+
+        console.log("🧩 ESTILO INLINE REAL DEL VIDEO");
+
+        console.log(video.getAttribute("style"));
+
+        console.log("----------------------------------------------");
+
+        console.log("📦 ESTILOS DEL SCREEN");
+
+        const estilosScreen = window.getComputedStyle(screen);
+
+        console.log("  position:", estilosScreen.position);
+
+        console.log("  width:", estilosScreen.width);
+
+        console.log("  height:", estilosScreen.height);
+
+        console.log("  overflow:", estilosScreen.overflow);
+
+        console.log("  background:", estilosScreen.background);
+
+        console.log("  transform:", estilosScreen.transform);
+
+        console.log("----------------------------------------------");
+
+        console.log("⚙️ CONFIGURACIÓN GUARDADA");
+
+        const configGuardada = localStorage.getItem("mesaVideoConfig");
+
+        if (configGuardada) {
+          try {
+            console.log(JSON.parse(configGuardada));
+          } catch (error) {
+            console.log(
+              "No se pudo interpretar la configuración:",
+              configGuardada,
+            );
+          }
+        } else {
+          console.log("No hay configuración guardada.");
+        }
+
+        console.log("==============================================");
+      }
+
+      /*
+       * Esperamos a que el video conozca
+       * sus dimensiones reales.
+       */
+
+      if (video.readyState >= 1) {
+        diagnosticoInicial();
+      } else {
+        video.addEventListener("loadedmetadata", diagnosticoInicial, {
+          once: true,
+        });
+      }
+    </script>
+  </body>
+</html>

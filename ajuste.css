@@ -1,0 +1,1326 @@
+/* =====================================================
+   AJUSTE VIDEO MESA-1
+   ESTILOS DEL CONFIGURADOR
+   ===================================================== */
+
+/* =====================================================
+   GENERAL
+   ===================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  font-family: Arial, sans-serif;
+
+  background: #000;
+}
+
+/* =====================================================
+   CONTENEDOR PRINCIPAL
+   ===================================================== */
+
+#app {
+  position: relative;
+
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+}
+
+/* =====================================================
+   PREVISUALIZACIÓN
+   ===================================================== */
+
+#previewArea {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  background: #111;
+
+  overflow: hidden;
+}
+
+/* =====================================================
+   PANTALLA SIMULADA
+   ===================================================== */
+
+#screen {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+/* =====================================================
+   VIDEO
+   ===================================================== */
+
+#mesaVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position: 50% 50%;
+
+  transform: translate(0%, 0%) scale(1) rotate(0deg);
+
+  transform-origin: center center;
+
+  filter: brightness(1) contrast(1) saturate(1);
+
+  pointer-events: none;
+}
+
+/* =====================================================
+   PANEL DE CONTROLES
+   ===================================================== */
+
+#controls {
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  width: 340px;
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  padding: 18px;
+
+  background: rgba(17, 17, 17, 0.96);
+
+  color: #fff;
+
+  border: 1px solid #444;
+
+  border-radius: 12px;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+
+  backdrop-filter: blur(8px);
+
+  z-index: 1000;
+
+  scrollbar-width: thin;
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+
+#controls::-webkit-scrollbar {
+  width: 7px;
+}
+
+#controls::-webkit-scrollbar-track {
+  background: #111;
+}
+
+#controls::-webkit-scrollbar-thumb {
+  background: #555;
+
+  border-radius: 10px;
+}
+
+#controls::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+/* =====================================================
+   TÍTULO
+   ===================================================== */
+
+h1 {
+  margin: 0;
+
+  font-size: 21px;
+
+  text-align: center;
+}
+
+.subtitle {
+  margin-top: 5px;
+
+  margin-bottom: 16px;
+
+  text-align: center;
+
+  color: #aaa;
+
+  font-size: 12px;
+}
+
+/* =====================================================
+   GRUPOS FIJOS
+   ===================================================== */
+
+.group {
+  margin-bottom: 10px;
+
+  padding: 12px;
+
+  background: #222;
+
+  border: 1px solid #444;
+
+  border-radius: 8px;
+}
+
+.group h2 {
+  margin: 0 0 10px 0;
+
+  font-size: 14px;
+
+  color: #eee;
+}
+
+/* =====================================================
+   BOTONES DE ORIENTACIÓN
+   ===================================================== */
+
+.buttonRow {
+  display: flex;
+
+  gap: 7px;
+}
+
+.smallButton {
+  flex: 1;
+
+  padding: 9px 5px;
+
+  margin: 0;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #444;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease;
+}
+
+.smallButton:hover {
+  background: #666;
+}
+
+.smallButton:active {
+  transform: scale(0.98);
+}
+
+/* =====================================================
+   ROTACIÓN
+   ===================================================== */
+
+.rotateButton {
+  width: 100%;
+
+  padding: 10px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: #555;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: bold;
+}
+
+.rotateButton:hover {
+  background: #666;
+}
+
+.rotationValue {
+  margin-top: 8px;
+
+  text-align: center;
+
+  font-size: 12px;
+
+  color: #aaa;
+}
+
+/* =====================================================
+   VALORES
+   ===================================================== */
+
+.value {
+  min-width: 55px;
+
+  text-align: right;
+
+  font-weight: bold;
+
+  color: #00ff88;
+}
+
+/* =====================================================
+   ACORDEÓN
+   ===================================================== */
+
+.accordion {
+  margin-bottom: 7px;
+
+  border: 1px solid #444;
+
+  border-radius: 8px;
+
+  background: #222;
+
+  overflow: hidden;
+}
+
+/* =====================================================
+   CABECERA ACORDEÓN
+   ===================================================== */
+
+.accordionHeader {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  width: 100%;
+
+  padding: 11px 12px;
+
+  border: none;
+
+  background: #222;
+
+  color: #eee;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  text-align: left;
+}
+
+.accordionHeader:hover {
+  background: #2c2c2c;
+}
+
+.accordionArrow {
+  font-size: 16px;
+
+  color: #aaa;
+
+  line-height: 1;
+}
+
+/* =====================================================
+   CONTENIDO ACORDEÓN
+   ===================================================== */
+
+.accordionContent {
+  max-height: 0;
+
+  overflow: hidden;
+
+  padding: 0 12px;
+
+  transition:
+    max-height 0.25s ease,
+    padding 0.25s ease;
+}
+
+/* =====================================================
+   ACORDEÓN ABIERTO
+   ===================================================== */
+
+.accordion.open .accordionContent {
+  padding-top: 10px;
+
+  padding-bottom: 3px;
+}
+
+/* =====================================================
+   CONTROLES
+   ===================================================== */
+
+.control {
+  margin-bottom: 12px;
+}
+
+.control:last-child {
+  margin-bottom: 8px;
+}
+
+.control label {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 5px;
+
+  font-size: 12px;
+
+  color: #ddd;
+}
+
+/* =====================================================
+   SLIDERS
+   ===================================================== */
+
+input[type="range"] {
+  width: 100%;
+
+  margin: 0;
+
+  cursor: pointer;
+
+  accent-color: #00c77f;
+}
+
+/* =====================================================
+   AUDIO
+   ===================================================== */
+
+.audioButton {
+  width: 100%;
+
+  padding: 9px;
+
+  margin-bottom: 12px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #444;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: bold;
+}
+
+.audioButton:hover {
+  background: #555;
+}
+
+/* =====================================================
+   BOTONES DE ACCIÓN
+   ===================================================== */
+
+.resetButton,
+.copyButton {
+  width: 100%;
+
+  padding: 9px;
+
+  margin-top: 6px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: bold;
+}
+
+.resetButton {
+  background: #8b0000;
+
+  color: white;
+}
+
+.resetButton:hover {
+  background: #a00000;
+}
+
+.copyButton {
+  background: #00a86b;
+
+  color: white;
+}
+
+.copyButton:hover {
+  background: #00c77f;
+}
+
+/* =====================================================
+   INDICADOR GUARDADO
+   ===================================================== */
+
+#saved {
+  height: 16px;
+
+  margin-top: 7px;
+
+  text-align: center;
+
+  color: #00ff88;
+
+  font-size: 11px;
+}
+
+/* =====================================================
+   CSS GENERADO
+   ===================================================== */
+
+#cssOutput {
+  width: 100%;
+
+  height: 220px;
+
+  padding: 8px;
+
+  resize: none;
+
+  border: 1px solid #444;
+
+  border-radius: 6px;
+
+  background: #000;
+
+  color: #00ff88;
+
+  font-family: Consolas, monospace;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 800px) {
+  #controls {
+    top: 10px;
+    right: 10px;
+
+    width: 310px;
+
+    max-height: calc(100vh - 20px);
+
+    padding: 14px;
+  }
+}
+
+/* =====================================================
+   PANEL FLOTANTE
+   ===================================================== */
+
+#controls {
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  width: 340px;
+
+  max-height: calc(100vh - 40px);
+
+  padding: 0;
+
+  background: rgba(17, 17, 17, 0.96);
+
+  border: 1px solid #444;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  z-index: 1000;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+
+  backdrop-filter: blur(8px);
+}
+
+/* =====================================================
+   CABECERA ARRASTRABLE
+   ===================================================== */
+
+#panelHeader {
+  height: 46px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 0 10px 0 14px;
+
+  background: #1b1b1b;
+
+  border-bottom: 1px solid #444;
+
+  color: #fff;
+
+  cursor: move;
+
+  user-select: none;
+}
+
+/* =====================================================
+   BOTONES DEL PANEL
+   ===================================================== */
+
+.panelActions {
+  display: flex;
+
+  gap: 5px;
+}
+
+.panelActions button {
+  width: 28px;
+  height: 28px;
+
+  margin: 0;
+  padding: 0;
+
+  border: none;
+
+  border-radius: 5px;
+
+  background: #444;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+  line-height: 28px;
+}
+
+.panelActions button:hover {
+  background: #666;
+}
+
+/* =====================================================
+   CONTENIDO DEL PANEL
+   ===================================================== */
+
+#panelContent {
+  max-height: calc(100vh - 86px);
+
+  overflow-y: auto;
+
+  padding: 16px;
+}
+
+/* =====================================================
+   PANEL MINIMIZADO
+   ===================================================== */
+
+#controls.minimized {
+  width: 230px;
+}
+
+#controls.minimized #panelContent {
+  display: none;
+}
+
+#controls.minimized #panelHeader {
+  border-bottom: none;
+}
+
+/* =====================================================
+   BOTÓN RESTAURAR
+   ===================================================== */
+
+#restoreBtn {
+  position: fixed;
+
+  top: 20px;
+  right: 20px;
+
+  width: auto;
+
+  padding: 10px 15px;
+
+  margin: 0;
+
+  display: none;
+
+  border: 1px solid #555;
+
+  border-radius: 8px;
+
+  background: rgba(17, 17, 17, 0.95);
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  z-index: 2000;
+}
+
+#restoreBtn:hover {
+  background: #333;
+}
+
+/* =====================================================
+   PANEL OCULTO
+   ===================================================== */
+
+#controls.hidden {
+  display: none;
+}
+
+/* =====================================================
+   ADMINISTRADOR DE VIDEOS
+   ===================================================== */
+
+#videoManager {
+  position: fixed;
+
+  top: 80px;
+  right: 25px;
+
+  width: 340px;
+  max-height: calc(100vh - 110px);
+
+  background: rgba(17, 17, 17, 0.97);
+
+  color: white;
+
+  border: 1px solid #555;
+
+  border-radius: 10px;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65);
+
+  z-index: 10000;
+
+  overflow: hidden;
+
+  backdrop-filter: blur(8px);
+}
+
+/* =====================================================
+   CABECERA
+   ===================================================== */
+
+#videoManagerHeader {
+  height: 45px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 10px 0 14px;
+
+  background: #222;
+
+  border-bottom: 1px solid #444;
+
+  cursor: move;
+
+  user-select: none;
+}
+
+.videoManagerTitle {
+  font-size: 14px;
+
+  color: #eee;
+}
+
+.videoManagerActions {
+  display: flex;
+
+  gap: 5px;
+}
+
+.videoManagerActions button {
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  margin: 0;
+
+  border: 0;
+
+  border-radius: 5px;
+
+  background: #444;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 18px;
+}
+
+.videoManagerActions button:hover {
+  background: #666;
+}
+
+/* =====================================================
+   CONTENIDO
+   ===================================================== */
+
+#videoManagerContent {
+  max-height: calc(100vh - 155px);
+
+  overflow-y: auto;
+
+  padding: 12px;
+}
+
+#videoManagerContent::-webkit-scrollbar {
+  width: 7px;
+}
+
+#videoManagerContent::-webkit-scrollbar-thumb {
+  background: #555;
+
+  border-radius: 5px;
+}
+
+/* =====================================================
+   SECCIONES
+   ===================================================== */
+
+.videoSection {
+  margin-bottom: 16px;
+
+  padding: 10px;
+
+  background: #222;
+
+  border: 1px solid #444;
+
+  border-radius: 8px;
+}
+
+.videoSectionTitle {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 10px;
+
+  font-size: 14px;
+
+  font-weight: bold;
+
+  color: #eee;
+}
+
+#mesaCount {
+  font-size: 11px;
+
+  font-weight: normal;
+
+  color: #999;
+}
+
+/* =====================================================
+   TARJETA DE VIDEO
+   ===================================================== */
+
+.videoCard {
+  margin-bottom: 10px;
+
+  padding: 8px;
+
+  background: #111;
+
+  border: 1px solid #444;
+
+  border-radius: 7px;
+}
+
+.videoCard:last-child {
+  margin-bottom: 0;
+}
+
+.videoCardName {
+  margin-bottom: 7px;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  color: #ddd;
+}
+
+/* =====================================================
+   MINIATURA
+   ===================================================== */
+
+.videoThumbnail {
+  width: 100%;
+
+  height: 120px;
+
+  object-fit: cover;
+
+  display: block;
+
+  background: #000;
+
+  border-radius: 5px;
+
+  margin-bottom: 8px;
+}
+
+/* =====================================================
+   BOTONES VIDEO
+   ===================================================== */
+
+.videoButtons {
+  display: flex;
+
+  gap: 5px;
+}
+
+.videoButtons button {
+  flex: 1;
+
+  height: 32px;
+
+  padding: 0;
+
+  margin: 0;
+
+  border: 0;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+  color: white;
+}
+
+.videoPlayButton {
+  background: #1769aa;
+}
+
+.videoChangeButton {
+  background: #555;
+}
+
+.videoDeleteButton {
+  background: #8b0000;
+}
+
+.videoButtons button:hover {
+  filter: brightness(1.2);
+}
+
+/* =====================================================
+   BOTÓN AGREGAR
+   ===================================================== */
+
+.videoAddButton {
+  width: 100%;
+
+  height: 36px;
+
+  margin-top: 8px;
+
+  border: 1px dashed #666;
+
+  border-radius: 6px;
+
+  background: #333;
+
+  color: #ddd;
+
+  cursor: pointer;
+
+  font-size: 12px;
+
+  font-weight: bold;
+}
+
+.videoAddButton:hover {
+  background: #444;
+
+  border-color: #888;
+}
+
+/* =====================================================
+   VIDEO VACÍO
+   ===================================================== */
+
+.videoEmpty {
+  padding: 18px 8px;
+
+  text-align: center;
+
+  color: #888;
+
+  font-size: 12px;
+}
+
+/* =====================================================
+   ESTADO
+   ===================================================== */
+
+.videoStatus {
+  padding: 8px;
+
+  margin-top: 8px;
+
+  text-align: center;
+
+  font-size: 11px;
+
+  color: #00ff88;
+}
+
+/* =====================================================
+   PANEL MINIMIZADO
+   ===================================================== */
+
+#videoManager.minimized {
+  width: auto;
+
+  min-width: 150px;
+}
+
+#videoManager.minimized #videoManagerContent {
+  display: none;
+}
+
+/* =====================================================
+   PANEL OCULTO
+   ===================================================== */
+
+#videoManager.hidden {
+  display: none;
+}
+
+/* =====================================================
+   BOTÓN RESTAURAR
+   ===================================================== */
+
+#restoreVideoManager {
+  position: fixed;
+
+  right: 20px;
+
+  bottom: 20px;
+
+  width: 48px;
+
+  height: 48px;
+
+  display: none;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: #222;
+
+  color: white;
+
+  font-size: 20px;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+
+  z-index: 10001;
+}
+
+#restoreVideoManager:hover {
+  background: #444;
+}
+
+/* =====================================================
+   MODAL VIDEO
+   ===================================================== */
+
+#videoModal {
+  position: fixed;
+
+  inset: 0;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.85);
+
+  z-index: 20000;
+}
+
+#videoModalBox {
+  position: relative;
+
+  width: min(900px, 90vw);
+
+  max-height: 90vh;
+
+  padding: 15px;
+
+  background: #111;
+
+  border: 1px solid #555;
+
+  border-radius: 10px;
+
+  box-shadow: 0 15px 60px rgba(0, 0, 0, 0.8);
+}
+
+#videoModalPlayer {
+  width: 100%;
+
+  max-height: 75vh;
+
+  display: block;
+
+  background: #000;
+
+  border-radius: 6px;
+}
+
+#videoModalTitle {
+  margin-bottom: 10px;
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: bold;
+}
+
+#videoModalClose {
+  position: absolute;
+
+  right: 8px;
+
+  top: 8px;
+
+  z-index: 2;
+
+  width: 30px;
+
+  height: 30px;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.7);
+
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 20px;
+}
+
+/* =====================================================
+   MODAL NÚMERO DE MESA
+   ===================================================== */
+
+#mesaNumberModal {
+  position: fixed;
+
+  inset: 0;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.75);
+
+  z-index: 21000;
+}
+
+#mesaNumberBox {
+  width: 320px;
+
+  padding: 22px;
+
+  background: #222;
+
+  border: 1px solid #555;
+
+  border-radius: 10px;
+
+  color: white;
+
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+
+  text-align: center;
+}
+
+#mesaNumberBox h2 {
+  margin: 0 0 10px;
+
+  font-size: 18px;
+}
+
+#mesaNumberBox p {
+  margin: 0 0 12px;
+
+  color: #aaa;
+
+  font-size: 13px;
+}
+
+#mesaNumberInput {
+  width: 100%;
+
+  height: 40px;
+
+  padding: 8px;
+
+  background: #111;
+
+  color: white;
+
+  border: 1px solid #555;
+
+  border-radius: 6px;
+
+  text-align: center;
+
+  font-size: 18px;
+}
+
+.mesaNumberButtons {
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.mesaNumberButtons button {
+  flex: 1;
+
+  height: 38px;
+
+  border: 0;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+}
+
+#mesaNumberCancel {
+  background: #555;
+
+  color: white;
+}
+
+#mesaNumberContinue {
+  background: #00a86b;
+
+  color: white;
+}
+
+/* =====================================================
+   BOTÓN RESTAURAR PANEL DE AJUSTE
+   ===================================================== */
+
+#restoreBtn {
+  position: fixed;
+
+  right: 20px;
+  bottom: 20px;
+
+  width: 48px;
+  height: 48px;
+
+  padding: 0;
+  margin: 0;
+
+  display: none;
+
+  border: 1px solid #555;
+  border-radius: 50%;
+
+  background: #222;
+  color: white;
+
+  font-size: 20px;
+
+  cursor: pointer;
+
+  z-index: 99999;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+#restoreBtn:hover {
+  background: #333;
+}
