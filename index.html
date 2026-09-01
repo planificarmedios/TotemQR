@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -6,14 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Totem Interactivo</title>
-
-    <!-- =====================================================
-         CSS PRINCIPAL DEL VIDEO DE MESA
-         Este archivo contiene los valores de posición,
-         tamaño, escala y rotación configurados desde ajuste.html.
-         ===================================================== -->
-
-    <link rel="stylesheet" href="mesaVideo.css" />
 
     <style>
       /* =====================================================
@@ -44,12 +37,13 @@
         overflow: hidden;
 
         transform-origin: center center;
-
-        transition: transform 0.6s ease;
       }
 
       /* =====================================================
-         VIDEO DE ESPERA
+         VIDEO INTRO
+
+         ESTE VIDEO ES EL FONDO DEL INDEX.
+         NO SE ROTA.
          ===================================================== */
 
       #standbyVideo {
@@ -58,19 +52,54 @@
         top: 0;
         left: 0;
 
-        width: 100vw;
-        height: 100vh;
+        width: 170%;
+        height: 150%;
 
-        object-fit: cover;
-        object-position: center center;
+        object-fit: contain;
 
-        transform: scale(1);
+        object-position: 50% 50%;
+
+        transform: translate(-20%, -20%) scale(1.19) rotate(270deg);
+
+        transform-origin: center center;
+
+        filter: brightness(1) contrast(1) saturate(1);
 
         pointer-events: none;
 
-        z-index: -3;
+        z-index: 0;
 
         display: block;
+      }
+
+      /* =====================================================
+         VIDEO DE MESA
+         ===================================================== */
+
+      #mesaVideo {
+        position: absolute;
+
+        top: 0;
+        left: 0;
+
+        width: 200%;
+        height: 200%;
+
+        object-fit: contain;
+
+        object-position: 50% 50%;
+
+        transform: translate(-6%, 1%) scale(1.19) rotate(270deg);
+
+        transform-origin: center center;
+
+        filter: brightness(1) contrast(1) saturate(1);
+
+        pointer-events: none;
+
+        z-index: 1;
+
+        display: none;
       }
 
       /* =====================================================
@@ -108,7 +137,23 @@
         padding: 10px;
 
         box-sizing: border-box;
+
+        /* =================================================
+           ARRASTRE Y ROTACIÓN DEL QR
+           ================================================= */
+
+        transform: rotate(0deg);
+
+        transform-origin: center center;
+
+        user-select: none;
+
+        touch-action: none;
       }
+
+      /* =====================================================
+         VIDEO / ÁREA DE CÁMARA QR
+         ===================================================== */
 
       #qrVideo {
         position: relative;
@@ -139,6 +184,7 @@
         display: flex;
 
         justify-content: center;
+
         align-items: center;
 
         transition: opacity 0.3s ease;
@@ -235,7 +281,7 @@
       }
 
       /* =====================================================
-         TEXTO DEL ESCÁNER
+         TEXTO ESCÁNER
          ===================================================== */
 
       .qrScanText {
@@ -339,7 +385,7 @@
       }
 
       /* =====================================================
-         MODAL DE CÁMARAS
+         MODAL CÁMARAS
          ===================================================== */
 
       #camModal {
@@ -376,6 +422,9 @@
 
       /* =====================================================
          BOTÓN ROTAR
+
+         SOLO PARA PRUEBAS DEL QR.
+         NO ROTA EL INTRO.
          ===================================================== */
 
       #rotateBtn {
@@ -411,34 +460,40 @@
          ===================================================== -->
 
     <div id="totemWrapper">
-      <!-- =================================================
-           VIDEO DE ESPERA
-           ================================================= -->
+      <!-- ===================================================
+           VIDEO DE FONDO
 
-      <video id="standbyVideo" autoplay muted loop playsinline>
+           intro.mp4 se reproduce directamente desde INDEX.
+
+           IMPORTANTE:
+           - autoplay
+           - muted
+           - loop
+           - playsinline
+           - z-index 0
+           =================================================== -->
+
+      <video id="standbyVideo" autoplay muted loop playsinline preload="auto">
         <source src="videos/intro.mp4" type="video/mp4" />
 
         Tu navegador no soporta video HTML5.
       </video>
 
-      <!-- =================================================
-           VIDEO DE LA MESA
+      <!-- =====================================================
+           VIDEO DE MESA
 
-           IMPORTANTE:
-           NO colocamos aquí estilos de tamaño/posición.
+           Permanece oculto mientras esperamos el QR.
+           Cuando se detecta una mesa, app.js indicará
+           qué video cargar.
+           ===================================================== -->
 
-           Todo eso viene de mesaVideo.css
-           ================================================= -->
-
-      <video id="mesaVideo" playsinline>
-        <source src="videos/mesa-1.mp4" type="video/mp4" />
-
-        Tu navegador no soporta video HTML5.
+      <video id="mesaVideo" muted loop playsinline preload="auto">
+        <source src="" type="video/mp4" />
       </video>
 
-      <!-- =================================================
+      <!-- ===================================================
            QR
-           ================================================= -->
+           =================================================== -->
 
       <div id="qrContainer">
         <div id="qrVideo">
@@ -501,11 +556,6 @@
 
     <!-- =====================================================
          ME SPEAK
-         =====================================================
-
-         La dejamos porque app.js puede seguir utilizándola
-         para las pruebas, aunque el funcionamiento normal
-         del tótem ya NO habla al detectar el QR.
          ===================================================== -->
 
     <script src="mespeak/mespeak.js"></script>
@@ -517,56 +567,198 @@
     <script src="app.js"></script>
 
     <!-- =====================================================
-         FUNCIONALIDADES DEL INDEX
+         CONFIGURACIÓN / ARRASTRE / ROTACIÓN DEL QR
          ===================================================== -->
 
     <script>
-      /* =====================================================
-         DRAG DE LA VENTANA QR
-         ===================================================== */
-
       const qrContainer = document.getElementById("qrContainer");
 
-      let offsetX = 0;
-      let offsetY = 0;
+      const rotateBtn = document.getElementById("rotateBtn");
 
-      let isDown = false;
+      let qrDragging = false;
 
-      qrContainer.addEventListener("mousedown", (e) => {
-        isDown = true;
+      let qrStartX = 0;
+      let qrStartY = 0;
 
-        offsetX = e.clientX - qrContainer.offsetLeft;
+      let qrStartLeft = 0;
+      let qrStartTop = 0;
 
-        offsetY = e.clientY - qrContainer.offsetTop;
-      });
+      let qrRotation = parseInt(localStorage.getItem("qrRotation") || "0", 10);
 
-      document.addEventListener("mouseup", () => {
-        isDown = false;
-      });
+      /* =====================================================
+         RESTAURAR POSICIÓN Y ROTACIÓN
+         ===================================================== */
 
-      document.addEventListener("mousemove", (e) => {
-        if (!isDown) {
+      const qrSavedLeft = localStorage.getItem("qrLeft");
+
+      const qrSavedTop = localStorage.getItem("qrTop");
+
+      if (qrSavedLeft !== null && qrSavedTop !== null) {
+        qrContainer.style.left = qrSavedLeft + "px";
+
+        qrContainer.style.top = qrSavedTop + "px";
+      }
+
+      qrContainer.style.transform = `rotate(${qrRotation}deg)`;
+
+      /* =====================================================
+         COMENZAR ARRASTRE
+         ===================================================== */
+
+      qrContainer.addEventListener("pointerdown", (e) => {
+        /*
+         * Si hacemos clic sobre un botón,
+         * select, input o textarea,
+         * dejamos que funcione normalmente.
+         */
+
+        if (e.target.closest("button, select, input, textarea")) {
           return;
         }
 
-        qrContainer.style.left = e.clientX - offsetX + "px";
+        qrDragging = true;
 
-        qrContainer.style.top = e.clientY - offsetY + "px";
+        qrContainer.setPointerCapture(e.pointerId);
+
+        qrStartX = e.clientX;
+        qrStartY = e.clientY;
+
+        qrStartLeft = qrContainer.offsetLeft;
+
+        qrStartTop = qrContainer.offsetTop;
+
+        qrContainer.style.cursor = "grabbing";
+
+        e.preventDefault();
       });
 
       /* =====================================================
-         ROTACIÓN DEL TOTEM
+         MOVER QR
          ===================================================== */
 
-      let rotation = 0;
+      qrContainer.addEventListener("pointermove", (e) => {
+        if (!qrDragging) {
+          return;
+        }
 
-      document.getElementById("rotateBtn").onclick = () => {
-        rotation = (rotation + 90) % 360;
+        const deltaX = e.clientX - qrStartX;
 
-        const wrapper = document.getElementById("totemWrapper");
+        const deltaY = e.clientY - qrStartY;
 
-        wrapper.style.transform = `rotate(${rotation}deg)`;
-      };
+        let nuevaLeft = qrStartLeft + deltaX;
+
+        let nuevaTop = qrStartTop + deltaY;
+
+        /* =================================================
+             LIMITAR A LA PANTALLA
+             ================================================= */
+
+        const maxLeft = window.innerWidth - qrContainer.offsetWidth;
+
+        const maxTop = window.innerHeight - qrContainer.offsetHeight;
+
+        nuevaLeft = Math.max(0, Math.min(nuevaLeft, maxLeft));
+
+        nuevaTop = Math.max(0, Math.min(nuevaTop, maxTop));
+
+        qrContainer.style.left = nuevaLeft + "px";
+
+        qrContainer.style.top = nuevaTop + "px";
+      });
+
+      /* =====================================================
+         TERMINAR ARRASTRE
+         ===================================================== */
+
+      qrContainer.addEventListener("pointerup", (e) => {
+        if (!qrDragging) {
+          return;
+        }
+
+        qrDragging = false;
+
+        qrContainer.style.cursor = "move";
+
+        /* =================================================
+             GUARDAR POSICIÓN
+             ================================================= */
+
+        localStorage.setItem("qrLeft", qrContainer.offsetLeft);
+
+        localStorage.setItem("qrTop", qrContainer.offsetTop);
+      });
+
+      qrContainer.addEventListener("pointercancel", () => {
+        qrDragging = false;
+
+        qrContainer.style.cursor = "move";
+      });
+
+      /* =====================================================
+         ROTAR QR
+         ===================================================== */
+
+      rotateBtn.addEventListener("click", () => {
+        qrRotation += 90;
+
+        if (qrRotation >= 360) {
+          qrRotation = 0;
+        }
+
+        qrContainer.style.transform = `rotate(${qrRotation}deg)`;
+
+        /* =================================================
+             GUARDAR ROTACIÓN
+             ================================================= */
+
+        localStorage.setItem("qrRotation", qrRotation);
+
+        console.log("🔄 Rotación QR:", qrRotation + "°");
+      });
+
+      /* =====================================================
+         DIAGNÓSTICO QR
+         ===================================================== */
+
+      console.log("==============================================");
+
+      console.log("📷 CONFIGURACIÓN QR");
+
+      console.log(
+        "📍 Posición:",
+        qrContainer.offsetLeft,
+        qrContainer.offsetTop,
+      );
+
+      console.log("🔄 Rotación:", qrRotation + "°");
+
+      console.log("==============================================");
+    </script>
+
+    <!-- =====================================================
+         DIAGNÓSTICO VIDEO INTRO
+         ===================================================== -->
+
+    <script>
+      console.log("==============================================");
+
+      console.log("🎬 INDEX.HTML");
+
+      console.log("==============================================");
+
+      console.log(
+        "🎞️ Elemento standbyVideo:",
+        document.getElementById("standbyVideo"),
+      );
+
+      console.log(
+        "📐 Tamaño ventana:",
+        window.innerWidth,
+        "x",
+        window.innerHeight,
+      );
+
+      console.log("==============================================");
     </script>
   </body>
 </html>

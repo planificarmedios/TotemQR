@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Totem - Bienvenida</title>
+
+    <!-- =====================================================
+         CONFIGURACIÓN DEL VIDEO DE MESA
+
+         Este archivo es generado por ajuste.html.
+
+         IMPORTANTE:
+         bienvenida.html utiliza EXACTAMENTE la misma
+         configuración que se guardó desde ajuste.html.
+         ===================================================== -->
+
+    <link rel="stylesheet" href="mesaVideo.css" />
+
+    <style>
+      /* =====================================================
+         CONFIGURACIÓN GENERAL
+         ===================================================== */
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+
+        width: 100%;
+        height: 100%;
+
+        overflow: hidden;
+
+        background: #000;
+      }
+
+      /* =====================================================
+         CONTENEDOR PRINCIPAL
+         ===================================================== */
+
+      #bienvenidaWrapper {
+        position: fixed;
+
+        inset: 0;
+
+        width: 100vw;
+        height: 100vh;
+
+        overflow: hidden;
+
+        background: #000;
+      }
+
+      /* =====================================================
+         VIDEO DE MESA
+
+         NO colocar aquí:
+         - posición
+         - escala
+         - rotación
+         - tamaño
+
+         Todo eso viene de mesaVideo.css
+         generado por ajuste.html.
+         ===================================================== */
+
+      #mesaVideo {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- =====================================================
+         CONTENEDOR DEL VIDEO
+         ===================================================== -->
+
+    <div id="bienvenidaWrapper">
+      <video id="mesaVideo" playsinline preload="auto">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+      // =====================================================
+      // CONFIGURACIÓN DE RUTAS
+      // =====================================================
+
+      const ROOT_PATH = window.location.hostname.includes("github.io")
+        ? "/qrApiClient/"
+        : "/";
+
+      function asset(path) {
+        return ROOT_PATH + path.replace(/^\/+/, "");
+      }
+
+      // =====================================================
+      // OBTENER NÚMERO DE MESA DESDE LA URL
+      // =====================================================
+
+      const params = new URLSearchParams(window.location.search);
+
+      const mesa = parseInt(params.get("mesa"), 10);
+
+      console.log("========================================");
+      console.log("🎬 BIENVENIDA.HTML");
+      console.log("🍽️ Mesa recibida:", mesa);
+      console.log("========================================");
+
+      // =====================================================
+      // VALIDAR NÚMERO DE MESA
+      // =====================================================
+
+      if (!Number.isInteger(mesa) || mesa < 1) {
+        console.error("❌ Número de mesa inválido.");
+
+        window.location.replace(asset("index.html"));
+      }
+
+      // =====================================================
+      // ELEMENTO VIDEO
+      // =====================================================
+
+      const mesaVideo = document.getElementById("mesaVideo");
+
+      // =====================================================
+      // DETERMINAR VIDEO
+      // =====================================================
+
+      const nombreVideo = `videos/mesa-${mesa}.mp4`;
+
+      const rutaVideo = asset(nombreVideo);
+
+      console.log("🎬 Video solicitado:", nombreVideo);
+      console.log("📂 Ruta:", rutaVideo);
+
+      // =====================================================
+      // CARGAR VIDEO
+      // =====================================================
+
+      mesaVideo.src = rutaVideo;
+
+      mesaVideo.load();
+
+      // =====================================================
+      // VIDEO CARGADO
+      // =====================================================
+
+      mesaVideo.addEventListener("loadedmetadata", () => {
+        console.log("✅ Video cargado correctamente.");
+
+        console.log(
+          "📐 Resolución:",
+          mesaVideo.videoWidth,
+          "x",
+          mesaVideo.videoHeight,
+        );
+
+        console.log("⏱️ Duración:", mesaVideo.duration, "segundos");
+      });
+
+      // =====================================================
+      // REPRODUCIR VIDEO
+      // =====================================================
+
+      mesaVideo
+        .play()
+        .then(() => {
+          console.log("▶️ Reproduciendo video de mesa.");
+        })
+        .catch((error) => {
+          console.error("❌ No se pudo reproducir el video:", error);
+        });
+
+      // =====================================================
+      // VIDEO TERMINADO
+      // =====================================================
+
+      mesaVideo.addEventListener("ended", () => {
+        console.log("========================================");
+        console.log("🎬 Video de mesa terminado.");
+        console.log("🔙 Volviendo a index.html...");
+        console.log("========================================");
+
+        window.location.replace(asset("index.html"));
+      });
+
+      // =====================================================
+      // ERROR DE VIDEO
+      // =====================================================
+
+      mesaVideo.addEventListener("error", () => {
+        console.error("❌ Error cargando el video:", nombreVideo);
+
+        console.error("📂 Ruta utilizada:", rutaVideo);
+
+        /*
+         * Si el video no existe o hay un problema,
+         * volvemos al lector QR.
+         */
+
+        setTimeout(() => {
+          window.location.replace(asset("index.html"));
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>

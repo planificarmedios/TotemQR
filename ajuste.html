@@ -6,7 +6,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Ajuste Video Mesa-1</title>
+    <title>Ajuste Video</title>
 
     <link rel="stylesheet" href="ajuste.css" />
   </head>
@@ -21,7 +21,6 @@
         <div id="screen" data-orientation="horizontal">
           <video
             id="mesaVideo"
-            autoplay
             muted
             loop
             playsinline
@@ -30,7 +29,11 @@
               object-position: 50% 50%;
             "
           >
-            <source src="videos/mesa-1.mp4" type="video/mp4" />
+            <source
+              id="mesaVideoSource"
+              src="videos/mesa-1.mp4"
+              type="video/mp4"
+            />
 
             Tu navegador no soporta video HTML5.
           </video>
@@ -61,12 +64,8 @@
          =================================================== -->
 
         <div id="panelContent">
-          <!-- =================================================
-           ORIENTACIÓN
-           ================================================= -->
-
-          <div class="group">
-            <h2>📱 Orientación</h2>
+          <div class="group" hidden>
+            <h2>📱 Orientaciónnn</h2>
 
             <div class="buttonRow">
               <button id="horizontalBtn" class="smallButton" type="button">
@@ -300,6 +299,20 @@
             </button>
 
             <div class="accordionContent">
+              <!-- CONTROLES DE REPRODUCCIÓN -->
+
+              <div class="videoPlaybackControls">
+                <button id="playPauseBtn" class="audioButton" type="button">
+                  ⏸ Pausar
+                </button>
+
+                <button id="restartBtn" class="audioButton" type="button">
+                  ⏮ Volver al inicio
+                </button>
+              </div>
+
+              <!-- CONTROL DE AUDIO -->
+
               <button id="audioBtn" class="audioButton" type="button">
                 🔇 Activar audio
               </button>
@@ -514,6 +527,50 @@
 
       const screen = document.getElementById("screen");
 
+      /* =====================================================
+   MESA RECIBIDA DESDE LA URL
+   ===================================================== */
+
+      const mesaVideoSource = document.getElementById("mesaVideoSource");
+
+      const parametrosURL = new URLSearchParams(window.location.search);
+
+      const mesaURL = parseInt(parametrosURL.get("mesa"), 10);
+
+      const modoTotem = Number.isInteger(mesaURL) && mesaURL >= 1;
+
+      if (modoTotem) {
+        document.body.style.visibility = "hidden";
+      }
+
+      if (modoTotem) {
+        const videoMesa = `videos/mesa-${mesaURL}.mp4`;
+
+        fetch(videoMesa, { method: "HEAD" })
+          .then((respuesta) => {
+            if (!respuesta.ok) {
+              window.location.replace("index.html");
+              return;
+            }
+
+            mesaVideoSource.src = videoMesa;
+            video.loop = false;
+            video.load();
+
+            document.body.style.visibility = "visible";
+
+            video.addEventListener(
+              "canplay",
+              () => {
+                video.play().catch(() => {});
+              },
+              { once: true },
+            );
+          })
+          .catch(() => {
+            window.location.replace("index.html");
+          });
+      }
       const translateX = document.getElementById("translateX");
 
       const translateY = document.getElementById("translateY");
@@ -559,6 +616,14 @@
       const cssOutput = document.getElementById("cssOutput");
 
       const saved = document.getElementById("saved");
+
+      /* =====================================================
+           CONTROLES DE REPRODUCCIÓN
+           ===================================================== */
+
+      const playPauseBtn = document.getElementById("playPauseBtn");
+
+      const restartBtn = document.getElementById("restartBtn");
 
       /* =====================================================
            PANEL CONFIGURACIÓN
@@ -652,64 +717,6 @@
         localStorage.setItem("mesaVideoConfig", JSON.stringify(config));
 
         saved.textContent = "✓ Configuración guardada";
-      }
-
-      /* =====================================================
-           ORIENTACIÓN
-           ===================================================== */
-
-      function setOrientation(orientation, guardar = true) {
-        screen.dataset.orientation = orientation;
-
-        if (orientation === "vertical") {
-          screen.style.width = "56.25vh";
-
-          screen.style.height = "100%";
-        } else {
-          screen.style.width = "100%";
-
-          screen.style.height = "100%";
-        }
-
-        if (guardar) {
-          saveConfig();
-        }
-      }
-
-      /* =====================================================
-           APLICAR CONFIGURACIÓN
-           ===================================================== */
-
-      function applyConfig(config) {
-        translateX.value = config.translateX ?? 0;
-
-        translateY.value = config.translateY ?? 0;
-
-        scale.value = config.scale ?? 1;
-
-        objectX.value = config.objectX ?? 50;
-
-        objectY.value = config.objectY ?? 50;
-
-        rotation = Number(config.rotate ?? 0);
-
-        rotation = ((rotation % 360) + 360) % 360;
-
-        brightness.value = config.brightness ?? 1;
-
-        contrast.value = config.contrast ?? 1;
-
-        saturate.value = config.saturate ?? 1;
-
-        volume.value = config.volume ?? 1;
-
-        video.volume = config.volume ?? 1;
-
-        video.muted = config.muted ?? true;
-
-        setOrientation(config.orientation || "horizontal", false);
-
-        updateVideo();
       }
 
       /* =====================================================
@@ -809,16 +816,40 @@
       });
 
       /* =====================================================
-           ORIENTACIÓN
+           CONTROLES DE REPRODUCCIÓN
            ===================================================== */
 
-      document.getElementById("horizontalBtn").addEventListener("click", () => {
-        setOrientation("horizontal");
+      function updatePlayPauseButton() {
+        if (video.paused) {
+          playPauseBtn.textContent = "▶ Reproducir";
+        } else {
+          playPauseBtn.textContent = "⏸ Pausar";
+        }
+      }
+
+      playPauseBtn.addEventListener("click", () => {
+        if (video.paused) {
+          video.play().catch((error) => {
+            console.warn("No se pudo reproducir el video:", error);
+          });
+        } else {
+          video.pause();
+        }
       });
 
-      document.getElementById("verticalBtn").addEventListener("click", () => {
-        setOrientation("vertical");
+      restartBtn.addEventListener("click", () => {
+        video.currentTime = 0;
+
+        video.pause();
+
+        updatePlayPauseButton();
       });
+
+      video.addEventListener("play", updatePlayPauseButton);
+
+      video.addEventListener("pause", updatePlayPauseButton);
+
+      video.addEventListener("ended", updatePlayPauseButton);
 
       /* =====================================================
            AUDIO
@@ -838,10 +869,14 @@
         video.muted = !video.muted;
 
         if (!video.muted) {
-          video.play();
+          video.play().catch((error) => {
+            console.warn("No se pudo reproducir el video:", error);
+          });
         }
 
         updateAudioButton();
+
+        updatePlayPauseButton();
 
         saveConfig();
       });
@@ -902,49 +937,50 @@
         const config = getConfig();
 
         const css = `/* =====================================================
-      
+   CONFIGURACIÓN DEL VIDEO MESA-1
+   Generado desde ajuste.html
+   Pantalla vertical 9:16
+   ===================================================== */
 
-      CONFIGURACIÓN DEL VIDEO MESA-1
-      Generado desde ajuste.html
-      ===================================================== */
+#mesaVideo {
 
-      #mesaVideo {
+  position: absolute;
 
-      position: absolute;
+  top: 0;
+  left: 0;
 
-      top: 0;
-      left: 0;
+  width: 100%;
+  height: 100%;
 
-      width: 100vw;
-      height: 100vh;
+  object-fit: contain;
 
-      object-fit: cover;
+  object-position:
+  ${config.objectX}% ${config.objectY}%;
 
-      object-position:
-      ${config.objectX}% ${config.objectY}%;
+  transform:
+  translate(
+    ${config.translateX}%,
+    ${config.translateY}%
+  )
+  scale(${config.scale})
+  rotate(${config.rotate}deg);
 
-      transform:
-      translate(
-      ${config.translateX}%,
-      ${config.translateY}%
-      )
-      scale(${config.scale})
-      rotate(${config.rotate}deg);
+  transform-origin:
+  center center;
 
-      transform-origin:
-      center center;
+  filter:
+  brightness(${config.brightness})
+  contrast(${config.contrast})
+  saturate(${config.saturate});
 
-      filter:
-      brightness(${config.brightness})
-      contrast(${config.contrast})
-      saturate(${config.saturate});
+  background: red;
 
-      pointer-events: none;
+  pointer-events: none;
 
-      z-index: -2;
+  z-index: -2;
 
-      display: none;
-      }`;
+  display: none;
+}`;
 
         cssOutput.value = css;
       }
@@ -1675,6 +1711,42 @@
       });
 
       /* =====================================================
+   MODO TÓTEM
+   Si ajuste.html recibe ?mesa=XX
+   ocultamos absolutamente todos los controles.
+   ===================================================== */
+
+      if (modoTotem) {
+        console.log("🙈 Ocultando controles para modo tótem");
+
+        // Panel de ajustes
+        controls.classList.add("hidden");
+
+        // Botón para restaurar ajustes
+        restoreBtn.style.display = "none";
+
+        // Administrador de videos
+        videoManager.classList.add("hidden");
+
+        // Botón para restaurar administrador
+        restoreVideoManager.style.display = "none";
+
+        // Al terminar el video → volver al INDEX
+        video.addEventListener(
+          "ended",
+          () => {
+            console.log("==============================================");
+            console.log("🏁 VIDEO TERMINADO");
+            console.log("🏠 Volviendo al INDEX");
+            console.log("==============================================");
+
+            window.location.replace("index.html");
+          },
+          { once: true },
+        );
+      }
+
+      /* =====================================================
            INICIALIZAR
            ===================================================== */
 
@@ -1682,19 +1754,19 @@
 
       updateAudioButton();
 
-      video.play().catch(() => {
-        console.log("El navegador requiere interacción para reproducir.");
-      });
+      updatePlayPauseButton();
 
       /* =====================================================
            CARGAR VIDEOS
            ===================================================== */
 
-      loadVideos();
+      if (!modoTotem) {
+        loadVideos();
+      }
 
       /* =====================================================
-   DIAGNÓSTICO INICIAL
-   ===================================================== */
+       DIAGNÓSTICO INICIAL
+       ===================================================== */
 
       function diagnosticoInicial() {
         console.log("==============================================");
@@ -1825,6 +1897,59 @@
         video.addEventListener("loadedmetadata", diagnosticoInicial, {
           once: true,
         });
+      }
+
+      function setOrientation(guardar = false) {
+        screen.dataset.orientation = "vertical";
+
+        console.log("🎬 MESA-1 — modo vertical");
+
+        screen.style.width = "200%";
+        screen.style.height = "200%";
+
+        if (guardar) {
+          saveConfig();
+        }
+      }
+
+      /* =====================================================
+       APLICAR CONFIGURACIÓN
+       ===================================================== */
+
+      function applyConfig(config) {
+        translateX.value = config.translateX ?? 0;
+
+        translateY.value = config.translateY ?? 0;
+
+        scale.value = config.scale ?? 1;
+
+        objectX.value = config.objectX ?? 50;
+
+        objectY.value = config.objectY ?? 50;
+
+        // MESA-1 SIEMPRE SE VISUALIZA ROTADA 270°
+        rotation = 270;
+
+        brightness.value = config.brightness ?? 1;
+
+        contrast.value = config.contrast ?? 1;
+
+        saturate.value = config.saturate ?? 1;
+
+        volume.value = config.volume ?? 1;
+
+        video.volume = config.volume ?? 1;
+
+        video.muted = config.muted ?? true;
+
+        // MESA-1 SIEMPRE VERTICAL
+        setOrientation(false);
+
+        updateVideo();
+
+        updatePlayPauseButton();
+
+        updateAudioButton();
       }
     </script>
   </body>
