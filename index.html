@@ -10,8 +10,8 @@
 
     <style>
       /* =====================================================
-         CONFIGURACIÓN GENERAL
-         ===================================================== */
+     CONFIGURACIÓN GENERAL
+     ===================================================== */
 
       html,
       body {
@@ -40,11 +40,15 @@
       }
 
       /* =====================================================
-         VIDEO INTRO
+     VIDEO INTRO
 
-         ESTE VIDEO ES EL FONDO DEL INDEX.
-         NO SE ROTA.
-         ===================================================== */
+     ESTE VIDEO ES EL FONDO DEL INDEX.
+     NO SE ROTA.
+     
+     IMPORTANTE:
+     El JavaScript va cambiando automáticamente
+     intro-1.mp4, intro-2.mp4, intro-3.mp4, etc.
+     ===================================================== */
 
       #standbyVideo {
         position: absolute;
@@ -73,8 +77,8 @@
       }
 
       /* =====================================================
-         VIDEO DE MESA
-         ===================================================== */
+     VIDEO DE MESA
+     ===================================================== */
 
       #mesaVideo {
         position: absolute;
@@ -103,8 +107,8 @@
       }
 
       /* =====================================================
-         QR
-         ===================================================== */
+     QR
+     ===================================================== */
 
       #qrContainer {
         position: absolute;
@@ -139,8 +143,8 @@
         box-sizing: border-box;
 
         /* =================================================
-           ARRASTRE Y ROTACIÓN DEL QR
-           ================================================= */
+       ARRASTRE Y ROTACIÓN DEL QR
+       ================================================= */
 
         transform: rotate(0deg);
 
@@ -152,8 +156,8 @@
       }
 
       /* =====================================================
-         VIDEO / ÁREA DE CÁMARA QR
-         ===================================================== */
+     VIDEO / ÁREA DE CÁMARA QR
+     ===================================================== */
 
       #qrVideo {
         position: relative;
@@ -169,8 +173,8 @@
       }
 
       /* =====================================================
-         EFECTO MIRA / ESCÁNER QR
-         ===================================================== */
+     EFECTO MIRA / ESCÁNER QR
+     ===================================================== */
 
       #qrScannerOverlay {
         position: absolute;
@@ -198,8 +202,8 @@
       }
 
       /* =====================================================
-         ESQUINAS DEL QR
-         ===================================================== */
+     ESQUINAS DEL QR
+     ===================================================== */
 
       .qrCorner {
         position: absolute;
@@ -243,8 +247,8 @@
       }
 
       /* =====================================================
-         LÁSER
-         ===================================================== */
+     LÁSER
+     ===================================================== */
 
       .qrLaser {
         position: absolute;
@@ -281,8 +285,8 @@
       }
 
       /* =====================================================
-         TEXTO ESCÁNER
-         ===================================================== */
+     TEXTO ESCÁNER
+     ===================================================== */
 
       .qrScanText {
         position: absolute;
@@ -309,8 +313,8 @@
       }
 
       /* =====================================================
-         QR DETECTADO
-         ===================================================== */
+     QR DETECTADO
+     ===================================================== */
 
       #qrScannerOverlay.detected .qrCorner {
         border-color: #00ff00;
@@ -353,8 +357,8 @@
       }
 
       /* =====================================================
-         RESULTADO QR
-         ===================================================== */
+     RESULTADO QR
+     ===================================================== */
 
       #qrResult {
         font-weight: bold;
@@ -365,8 +369,8 @@
       }
 
       /* =====================================================
-         BOTÓN CÁMARAS
-         ===================================================== */
+     BOTÓN CÁMARAS
+     ===================================================== */
 
       #selectCamsBtn {
         margin-top: 10px;
@@ -385,8 +389,8 @@
       }
 
       /* =====================================================
-         MODAL CÁMARAS
-         ===================================================== */
+     MODAL CÁMARAS
+     ===================================================== */
 
       #camModal {
         display: none;
@@ -421,11 +425,11 @@
       }
 
       /* =====================================================
-         BOTÓN ROTAR
+     BOTÓN ROTAR
 
-         SOLO PARA PRUEBAS DEL QR.
-         NO ROTA EL INTRO.
-         ===================================================== */
+     SOLO PARA PRUEBAS DEL QR.
+     NO ROTA EL INTRO.
+     ===================================================== */
 
       #rotateBtn {
         position: fixed;
@@ -461,39 +465,42 @@
 
     <div id="totemWrapper">
       <!-- ===================================================
-           VIDEO DE FONDO
+       VIDEO DE FONDO / INTRO
 
-           intro.mp4 se reproduce directamente desde INDEX.
+       IMPORTANTE:
 
-           IMPORTANTE:
-           - autoplay
-           - muted
-           - loop
-           - playsinline
-           - z-index 0
-           =================================================== -->
+       Ya no usamos:
 
-      <video id="standbyVideo" autoplay muted loop playsinline preload="auto">
-        <source src="videos/intro.mp4" type="video/mp4" />
+       videos/intro.mp4
 
+       Ahora JavaScript obtiene automáticamente
+       los videos desde:
+
+       videos/INTRO/intro-1.mp4
+       videos/INTRO/intro-2.mp4
+       videos/INTRO/intro-3.mp4
+       etc.
+
+       JavaScript controla el loop.
+       =================================================== -->
+
+      <video id="standbyVideo" autoplay muted playsinline preload="auto">
         Tu navegador no soporta video HTML5.
       </video>
 
       <!-- =====================================================
-           VIDEO DE MESA
+       VIDEO DE MESA
 
-           Permanece oculto mientras esperamos el QR.
-           Cuando se detecta una mesa, app.js indicará
-           qué video cargar.
-           ===================================================== -->
+       Permanece oculto mientras esperamos el QR.
+       ===================================================== -->
 
       <video id="mesaVideo" muted loop playsinline preload="auto">
         <source src="" type="video/mp4" />
       </video>
 
       <!-- ===================================================
-           QR
-           =================================================== -->
+       QR
+       =================================================== -->
 
       <div id="qrContainer">
         <div id="qrVideo">
@@ -521,54 +528,262 @@
     </div>
 
     <!-- =====================================================
-         BOTÓN ROTAR
-         ===================================================== -->
+     BOTÓN ROTAR
+     ===================================================== -->
 
     <button id="rotateBtn">⟳</button>
 
     <!-- =====================================================
-         MODAL DE CÁMARAS
-         ===================================================== -->
+     MODAL DE CÁMARAS
+     ===================================================== -->
 
     <div id="camModal">
-      <div class="content">
-        <h3>Seleccionar Cámaras</h3>
+      <div
+        class="content"
+        style="
+          width: 100%;
+          max-width: 520px;
+          box-sizing: border-box;
+          font-family: Arial, Helvetica, sans-serif;
+        "
+      >
+        <!-- ENCABEZADO -->
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+          "
+        >
+          <div
+            style="
+              width: 48px;
+              height: 48px;
+              min-width: 48px;
+              border-radius: 50%;
+              background: #e8f0fe;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 22px;
+            "
+          >
+            📷
+          </div>
 
-        <div>
-          <label for="qrCamSelect"> Cámara QR: </label>
+          <div>
+            <h3
+              style="
+                margin: 0 0 5px 0;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 21px;
+                font-weight: 600;
+                line-height: 1.2;
+                color: #202124;
+              "
+            >
+              Seleccionar cámaras
+            </h3>
 
-          <select id="qrCamSelect"></select>
+            <div style="font-size: 13px; line-height: 1.4; color: #5f6368">
+              Configurá las cámaras utilizadas por el tótem.
+            </div>
+          </div>
         </div>
 
-        <button id="saveCamSelection" style="margin-top: 10px">Guardar</button>
+        <!-- CAMPO CÁMARA -->
+        <div style="margin-bottom: 28px">
+          <label
+            for="qrCamSelect"
+            style="
+              display: block;
+              margin-bottom: 8px;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 13px;
+              font-weight: 600;
+              color: #3c4043;
+            "
+          >
+            Cámara para lectura QR
+          </label>
 
-        <button id="closeCamModal" style="margin-top: 10px; margin-left: 10px">
-          Cerrar
-        </button>
+          <!-- SELECT -->
+          <div style="position: relative">
+            <select
+              id="qrCamSelect"
+              style="
+                width: 100%;
+                height: 52px;
+                box-sizing: border-box;
+
+                padding: 0 45px 0 16px;
+
+                border: 1px solid #dadce0;
+                border-radius: 8px;
+
+                background: #ffffff;
+
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 14px;
+                color: #202124;
+
+                outline: none;
+
+                appearance: none;
+                -webkit-appearance: none;
+
+                cursor: pointer;
+              "
+              onfocus="
+                this.style.borderColor = '#1a73e8';
+                this.style.boxShadow = '0 0 0 3px rgba(26,115,232,.15)';
+              "
+              onblur="
+                this.style.borderColor = '#dadce0';
+                this.style.boxShadow = 'none';
+              "
+            >
+              <option
+                value="a358cb81f2d366622b93e6362845192ba7add10c7caef5507043919a84ee6fdf"
+              >
+                Integrated Webcam (0c45:6730)
+              </option>
+
+              <option
+                value="012d72d48b66dd6fab0bcbde627c5b15b1db8e3a6c1b0324088637ee2cf054f2"
+              >
+                GENERAL WEBCAM (1b3f:2247)
+              </option>
+            </select>
+
+            <!-- FLECHA -->
+            <span
+              style="
+                position: absolute;
+                right: 16px;
+                top: 50%;
+                transform: translateY(-50%);
+
+                font-size: 18px;
+                color: #5f6368;
+
+                pointer-events: none;
+              "
+            >
+              ▾
+            </span>
+          </div>
+
+          <!-- AYUDA -->
+          <div
+            style="
+              margin-top: 9px;
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 12px;
+              color: #80868b;
+            "
+          >
+            Esta cámara será utilizada para detectar los códigos QR.
+          </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div
+          style="
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            padding-top: 4px;
+          "
+        >
+          <!-- CERRAR -->
+          <button
+            id="closeCamModal"
+            type="button"
+            style="
+              height: 40px;
+              padding: 0 18px;
+
+              border: none;
+              border-radius: 6px;
+
+              background: rgb(246, 200, 200);
+
+              color: #5f6368;
+
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 13px;
+              font-weight: 600;
+
+              cursor: pointer;
+            "
+            onmouseenter="this.style.background = '#f1f3f4'"
+            onmouseleave="this.style.background = 'transparent'"
+          >
+            Cerrar
+          </button>
+
+          <!-- GUARDAR -->
+          <button
+            id="saveCamSelection"
+            type="button"
+            style="
+              height: 40px;
+              padding: 0 20px;
+
+              border: none;
+              border-radius: 6px;
+
+              background: #1a73e8;
+
+              color: white;
+
+              font-family: Arial, Helvetica, sans-serif;
+              font-size: 13px;
+              font-weight: 600;
+
+              cursor: pointer;
+
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            "
+            onmouseenter="
+              this.style.background = '#1765cc';
+              this.style.boxShadow = '0 2px 6px rgba(0,0,0,.25)';
+            "
+            onmouseleave="
+              this.style.background = '#1a73e8';
+              this.style.boxShadow = '0 1px 3px rgba(0,0,0,.2)';
+            "
+          >
+            ✓&nbsp; Guardar
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- =====================================================
-         LIBRERÍA QR
-         ===================================================== -->
+     LIBRERÍA QR
+     ===================================================== -->
 
     <script src="https://unpkg.com/html5-qrcode"></script>
 
     <!-- =====================================================
-         ME SPEAK
-         ===================================================== -->
+     ME SPEAK
+     ===================================================== -->
 
     <script src="mespeak/mespeak.js"></script>
 
     <!-- =====================================================
-         APP PRINCIPAL
-         ===================================================== -->
+     APP PRINCIPAL
+     ===================================================== -->
 
     <script src="app.js"></script>
 
     <!-- =====================================================
-         CONFIGURACIÓN / ARRASTRE / ROTACIÓN DEL QR
-         ===================================================== -->
+     CONFIGURACIÓN / ARRASTRE / ROTACIÓN DEL QR
+     ===================================================== -->
 
     <script>
       const qrContainer = document.getElementById("qrContainer");
@@ -586,8 +801,8 @@
       let qrRotation = parseInt(localStorage.getItem("qrRotation") || "0", 10);
 
       /* =====================================================
-         RESTAURAR POSICIÓN Y ROTACIÓN
-         ===================================================== */
+     RESTAURAR POSICIÓN Y ROTACIÓN
+     ===================================================== */
 
       const qrSavedLeft = localStorage.getItem("qrLeft");
 
@@ -602,8 +817,8 @@
       qrContainer.style.transform = `rotate(${qrRotation}deg)`;
 
       /* =====================================================
-         COMENZAR ARRASTRE
-         ===================================================== */
+     COMENZAR ARRASTRE
+     ===================================================== */
 
       qrContainer.addEventListener("pointerdown", (e) => {
         /*
@@ -621,6 +836,7 @@
         qrContainer.setPointerCapture(e.pointerId);
 
         qrStartX = e.clientX;
+
         qrStartY = e.clientY;
 
         qrStartLeft = qrContainer.offsetLeft;
@@ -633,8 +849,8 @@
       });
 
       /* =====================================================
-         MOVER QR
-         ===================================================== */
+     MOVER QR
+     ===================================================== */
 
       qrContainer.addEventListener("pointermove", (e) => {
         if (!qrDragging) {
@@ -650,8 +866,8 @@
         let nuevaTop = qrStartTop + deltaY;
 
         /* =================================================
-             LIMITAR A LA PANTALLA
-             ================================================= */
+       LIMITAR A LA PANTALLA
+       ================================================= */
 
         const maxLeft = window.innerWidth - qrContainer.offsetWidth;
 
@@ -667,8 +883,8 @@
       });
 
       /* =====================================================
-         TERMINAR ARRASTRE
-         ===================================================== */
+     TERMINAR ARRASTRE
+     ===================================================== */
 
       qrContainer.addEventListener("pointerup", (e) => {
         if (!qrDragging) {
@@ -680,8 +896,8 @@
         qrContainer.style.cursor = "move";
 
         /* =================================================
-             GUARDAR POSICIÓN
-             ================================================= */
+       GUARDAR POSICIÓN
+       ================================================= */
 
         localStorage.setItem("qrLeft", qrContainer.offsetLeft);
 
@@ -695,8 +911,8 @@
       });
 
       /* =====================================================
-         ROTAR QR
-         ===================================================== */
+     ROTAR QR
+     ===================================================== */
 
       rotateBtn.addEventListener("click", () => {
         qrRotation += 90;
@@ -708,8 +924,8 @@
         qrContainer.style.transform = `rotate(${qrRotation}deg)`;
 
         /* =================================================
-             GUARDAR ROTACIÓN
-             ================================================= */
+       GUARDAR ROTACIÓN
+       ================================================= */
 
         localStorage.setItem("qrRotation", qrRotation);
 
@@ -717,8 +933,8 @@
       });
 
       /* =====================================================
-         DIAGNÓSTICO QR
-         ===================================================== */
+     DIAGNÓSTICO QR
+     ===================================================== */
 
       console.log("==============================================");
 
@@ -736,20 +952,129 @@
     </script>
 
     <!-- =====================================================
-         DIAGNÓSTICO VIDEO INTRO
-         ===================================================== -->
+     SISTEMA DE INTRO MULTIPLE
+     ===================================================== -->
 
     <script>
+      let introVideos = [];
+
+      let introActual = 0;
+
+      let introActivo = true;
+
+      /* =====================================================
+     CARGAR LISTA DE INTRO
+     ===================================================== */
+
+      async function cargarIntros() {
+        try {
+          console.log("🎞️ Consultando videos INTRO...");
+
+          const response = await fetch(asset("api/videos"));
+
+          if (!response.ok) {
+            throw new Error("No se pudo consultar /api/videos");
+          }
+
+          const data = await response.json();
+
+          introVideos = Array.isArray(data.intros) ? data.intros : [];
+
+          console.log("🎞️ INTRO encontrados:", introVideos);
+
+          if (introVideos.length === 0) {
+            console.warn("⚠️ No hay videos INTRO configurados.");
+
+            standbyVideo.removeAttribute("src");
+
+            return;
+          }
+
+          introActual = 0;
+
+          reproducirIntroActual();
+        } catch (error) {
+          console.error("❌ Error cargando INTRO:", error);
+        }
+      }
+
+      /* =====================================================
+     REPRODUCIR INTRO ACTUAL
+     ===================================================== */
+
+      function reproducirIntroActual() {
+        if (!introActivo) {
+          return;
+        }
+
+        if (
+          !introVideos.length ||
+          introActual < 0 ||
+          introActual >= introVideos.length
+        ) {
+          return;
+        }
+
+        const nombre = introVideos[introActual];
+
+        const url = asset(`videos/INTRO/${nombre}`);
+
+        console.log("▶️ Reproduciendo INTRO:", nombre);
+
+        standbyVideo.src = url;
+
+        standbyVideo.load();
+
+        const promesa = standbyVideo.play();
+
+        if (promesa !== undefined) {
+          promesa.catch((error) => {
+            console.warn(
+              "⚠️ No se pudo reproducir INTRO automáticamente:",
+              error,
+            );
+          });
+        }
+      }
+
+      standbyVideo.addEventListener("ended", () => {
+        console.log("====================================");
+        console.log("🏁 TERMINÓ INTRO:", introVideos[introActual]);
+        console.log("➡️ Pasando al siguiente INTRO...");
+        console.log("====================================");
+
+        if (!introActivo) return;
+        if (!introVideos.length) return;
+
+        introActual++;
+
+        if (introActual >= introVideos.length) {
+          introActual = 0;
+        }
+
+        console.log("🎞️ Nuevo INTRO:", introVideos[introActual]);
+
+        reproducirIntroActual();
+      });
+      /* =====================================================
+     INICIAR
+     ===================================================== */
+
+      cargarIntros();
+
+      /* =====================================================
+     DIAGNÓSTICO
+     ===================================================== */
+
       console.log("==============================================");
 
       console.log("🎬 INDEX.HTML");
 
+      console.log("🎞️ Sistema de INTRO múltiple activado");
+
       console.log("==============================================");
 
-      console.log(
-        "🎞️ Elemento standbyVideo:",
-        document.getElementById("standbyVideo"),
-      );
+      console.log("🎞️ Elemento standbyVideo:", standbyVideo);
 
       console.log(
         "📐 Tamaño ventana:",

@@ -25,7 +25,6 @@
 //
 // generado desde:
 //
-//     ajuste.html
 //
 // ======================================================
 
@@ -58,6 +57,12 @@ const qrResult = document.getElementById("qrResult");
 let qrScanner = null;
 
 let qrLock = false;
+
+// ======================================================
+// CÁMARA QR SELECCIONADA
+// ======================================================
+
+const CAMERA_STORAGE_KEY = "totemqr_camera_id";
 
 // ======================================================
 // INFORMACIÓN DE INICIO
@@ -95,13 +100,8 @@ function mostrarStandby() {
 
   standbyVideo.style.display = "block";
 
-  standbyVideo.loop = true;
-
-  standbyVideo.currentTime = 0;
-
-  standbyVideo.play().catch((error) => {
-    console.warn("No se pudo reproducir intro.mp4:", error);
-  });
+  // El sistema de INTRO múltiple
+  // se encarga de cargar y reproducir el video.
 }
 
 // ======================================================
@@ -158,7 +158,7 @@ async function reproducirRechazo() {
 async function volverAlStandby() {
   standbyVideo.onended = null;
 
-  standbyVideo.src = asset("videos/intro.mp4");
+  standbyVideo.src = asset("videos/INTRO/intro-1.mp4");
 
   standbyVideo.loop = true;
 
@@ -278,7 +278,7 @@ if (closeCamModal) {
 
 async function populateCameraOptions() {
   try {
-    console.log("📷 Solicitando permiso para listar cámaras...");
+    console.log("📷 Solicitando permiso para listar cámaras disponibles...");
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
@@ -334,6 +334,30 @@ async function populateCameraOptions() {
 
       qrSelect.appendChild(option);
     });
+
+    // --------------------------------------------------
+    // Recuperar cámara guardada
+    // --------------------------------------------------
+
+    const camaraGuardada = localStorage.getItem(CAMERA_STORAGE_KEY);
+
+    if (
+      camaraGuardada &&
+      videoDevices.some((device) => device.deviceId === camaraGuardada)
+    ) {
+      qrSelect.value = camaraGuardada;
+
+      console.log("📷 Cámara guardada recuperada:", camaraGuardada);
+    } else {
+      console.log("📷 No hay cámara guardada válida.");
+
+      // Seleccionar primera disponible
+      const primeraCamara = videoDevices.find((device) => device.deviceId);
+
+      if (primeraCamara) {
+        qrSelect.value = primeraCamara.deviceId;
+      }
+    }
   } catch (error) {
     console.error("❌ Error obteniendo cámaras:", error);
 
@@ -358,6 +382,14 @@ if (saveCamSelection) {
     }
 
     const qrCamId = qrSelect.value;
+
+    // ------------------------------------------------
+    // Guardar cámara seleccionada
+    // ------------------------------------------------
+
+    localStorage.setItem(CAMERA_STORAGE_KEY, qrCamId);
+
+    console.log("💾 Cámara QR guardada:", qrCamId);
 
     // ------------------------------------------------
     // Detener scanner anterior
@@ -484,16 +516,48 @@ async function startQrScanner(qrCamId = null) {
 
   let cameraId = qrCamId;
 
-  if (!cameraId) {
-    const primeraCamara = videoDevices.find((device) => device.deviceId);
+  // ==================================================
+  // SI NO SE PASÓ UNA CÁMARA,
+  // RECUPERAR LA CÁMARA GUARDADA
+  // ==================================================
 
-    if (primeraCamara) {
-      cameraId = primeraCamara.deviceId;
+  if (!cameraId) {
+    const camaraGuardada = localStorage.getItem(CAMERA_STORAGE_KEY);
+
+    if (
+      camaraGuardada &&
+      videoDevices.some((device) => device.deviceId === camaraGuardada)
+    ) {
+      cameraId = camaraGuardada;
+
+      const camaraEncontrada = videoDevices.find(
+        (device) => device.deviceId === camaraGuardada,
+      );
 
       console.log(
-        "📷 Utilizando primera cámara:",
-        primeraCamara.label || "Cámara",
+        "📷 Utilizando cámara guardada:",
+        camaraEncontrada?.label || "Cámara",
       );
+    } else {
+      // ==============================================
+      // FALLBACK:
+      // SI NO HAY CÁMARA GUARDADA,
+      // USAR LA PRIMERA DISPONIBLE
+      // ==============================================
+
+      const primeraCamara = videoDevices.find((device) => device.deviceId);
+
+      if (primeraCamara) {
+        cameraId = primeraCamara.deviceId;
+
+        console.log(
+          "📷 No hay cámara guardada. Utilizando primera cámara:",
+          primeraCamara.label || "Cámara",
+        );
+
+        // Guardarla también
+        localStorage.setItem(CAMERA_STORAGE_KEY, cameraId);
+      }
     }
   }
 

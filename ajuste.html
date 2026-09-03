@@ -411,39 +411,202 @@
 
         <div id="videoManagerContent">
           <!-- =================================================
-           INTRO
-           ================================================= -->
+       INTRO
+       ================================================= -->
 
-          <div class="videoSection">
-            <div class="videoSectionTitle">🎞️ INTRO</div>
-
-            <div id="introVideoContainer">
-              <div class="videoEmpty">Cargando...</div>
+          <div class="videoSection collapsibleVideoSection">
+            <div class="videoSectionTitle videoSectionToggle">
+              <span>🎞️ INTRO</span>
+              <span class="videoSectionArrow">＋</span>
             </div>
 
-            <button id="addIntroBtn" class="videoAddButton" type="button">
-              ＋ Subir INTRO
-            </button>
+            <div class="videoSectionContent">
+              <div id="introVideoContainer">
+                <div class="videoEmpty">Cargando...</div>
+              </div>
+
+              <button id="addIntroBtn" class="videoAddButton" type="button">
+                ＋ Subir INTRO
+              </button>
+            </div>
           </div>
 
           <!-- =================================================
-           MESAS
-           ================================================= -->
+       MESAS
+       ================================================= -->
 
-          <div class="videoSection">
-            <div class="videoSectionTitle">
-              🪑 MESAS
+          <div class="videoSection collapsibleVideoSection">
+            <div class="videoSectionTitle videoSectionToggle">
+              <span>
+                🪑 MESAS
+                <span id="mesaCount">0</span>
+              </span>
 
-              <span id="mesaCount"> 0 </span>
+              <span class="videoSectionArrow">＋</span>
             </div>
 
-            <div id="mesaVideosContainer">
-              <div class="videoEmpty">Cargando...</div>
+            <div class="videoSectionContent">
+              <div id="mesaVideosContainer">
+                <div class="videoEmpty">Cargando...</div>
+              </div>
+
+              <button id="addMesaBtn" class="videoAddButton" type="button">
+                ＋ Agregar video de mesa
+              </button>
+            </div>
+          </div>
+
+          <!-- =================================================
+       RECHAZAR
+       ================================================= -->
+
+          <div
+            class="videoSection collapsibleVideoSection"
+            style="
+              width: 100%;
+              margin-bottom: 12px;
+              border: 1px solid #444;
+              border-radius: 8px;
+              overflow: hidden;
+              background: #1e1e1e;
+            "
+          >
+            <div
+              class="videoSectionTitle videoSectionToggle"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                min-height: 44px;
+                padding: 0 14px;
+                box-sizing: border-box;
+                background: #2b2b2b;
+                color: #fff;
+                font-weight: bold;
+                cursor: pointer;
+              "
+            >
+              <span>❌ RECHAZAR</span>
+
+              <span
+                class="videoSectionArrow"
+                style="font-size: 22px; line-height: 1; color: #ccc"
+              >
+                ＋
+              </span>
             </div>
 
-            <button id="addMesaBtn" class="videoAddButton" type="button">
-              ＋ Agregar video de mesa
-            </button>
+            <div
+              class="videoSectionContent"
+              style="padding: 12px; box-sizing: border-box; background: #181818"
+            >
+              <div id="rechazarVideoContainer">
+                <div
+                  class="videoCard"
+                  style="
+                    width: 100%;
+                    padding: 10px;
+                    box-sizing: border-box;
+                    border: 1px solid #444;
+                    border-radius: 6px;
+                    background: #252525;
+                  "
+                >
+                  <div
+                    class="videoCardName"
+                    style="
+                      margin-bottom: 10px;
+                      color: #fff;
+                      font-size: 14px;
+                      font-weight: bold;
+                    "
+                  >
+                    rechazar.mp4
+                  </div>
+
+                  <div
+                    class="videoButtons"
+                    style="display: flex; gap: 8px; width: 100%"
+                  >
+                    <button
+                      class="videoPlayButton"
+                      type="button"
+                      onclick="
+                        playManagedVideo('/videos/rechazar.mp4', 'RECHAZAR')
+                      "
+                      style="
+                        flex: 1;
+                        height: 36px;
+                        border: none;
+                        border-radius: 5px;
+                        background: #1769aa;
+                        color: #fff;
+                        cursor: pointer;
+                        font-size: 14px;
+                      "
+                    >
+                      ▶ Ver
+                    </button>
+
+                    <button
+                      class="videoEditButton"
+                      type="button"
+                      onclick="changeRechazarVideo()"
+                      style="
+                        flex: 1;
+                        height: 36px;
+                        border: none;
+                        border-radius: 5px;
+                        background: #555;
+                        color: #fff;
+                        cursor: pointer;
+                        font-size: 14px;
+                      "
+                    >
+                      ✏️ Cambiar
+                    </button>
+
+                    <button
+                      class="videoDeleteButton"
+                      type="button"
+                      onclick="deleteManagedVideo('rechazar.mp4')"
+                      style="
+                        width: 45px;
+                        height: 36px;
+                        border: none;
+                        border-radius: 5px;
+                        background: #8b0000;
+                        color: #fff;
+                        cursor: pointer;
+                        font-size: 16px;
+                      "
+                    >
+                      🗑
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                id="addRechazarBtn"
+                class="videoAddButton"
+                type="button"
+                style="
+                  width: 100%;
+                  height: 36px;
+                  margin-top: 8px;
+                  border: none;
+                  border-radius: 5px;
+                  background: #333;
+                  color: #fff;
+                  cursor: pointer;
+                  font-size: 14px;
+                "
+              >
+                ＋ Subir
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -472,6 +635,13 @@
       />
 
       <input type="file" id="mesaFileInput" accept="video/mp4,video/*" hidden />
+
+      <input
+        type="file"
+        id="rechazarFileInput"
+        accept="video/mp4,video/*"
+        hidden
+      />
 
       <!-- =====================================================
        MODAL REPRODUCTOR
@@ -1170,9 +1340,17 @@
 
       const addMesaBtn = document.getElementById("addMesaBtn");
 
+      const addRechazarBtn = document.getElementById("addRechazarBtn");
+
       const introFileInput = document.getElementById("introFileInput");
 
       const mesaFileInput = document.getElementById("mesaFileInput");
+
+      const rechazarFileInput = document.getElementById("rechazarFileInput");
+
+      const rechazarVideoContainer = document.getElementById(
+        "rechazarVideoContainer",
+      );
 
       /* =====================================================
            MODAL VIDEO
@@ -1199,6 +1377,26 @@
       const mesaNumberContinue = document.getElementById("mesaNumberContinue");
 
       /* =====================================================
+   SECCIONES RETRAÍBLES DEL ADMINISTRADOR
+   ===================================================== */
+
+      document.querySelectorAll(".videoSectionToggle").forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const section = toggle.closest(".collapsibleVideoSection");
+
+          const arrow = toggle.querySelector(".videoSectionArrow");
+
+          section.classList.toggle("collapsed");
+
+          if (section.classList.contains("collapsed")) {
+            arrow.textContent = "＋";
+          } else {
+            arrow.textContent = "−";
+          }
+        });
+      });
+
+      /* =====================================================
            CARGAR LISTA DE VIDEOS
            ===================================================== */
 
@@ -1212,74 +1410,96 @@
 
           const data = await response.json();
 
-          renderIntro(data.intro);
+          renderIntro(data.intros || []);
 
-          renderMesas(data.mesas);
+          renderMesas(data.mesas || []);
+
+          renderRechazar(data.rechazar || false);
         } catch (error) {
           console.error("Error cargando videos:", error);
 
-          introVideoContainer.innerHTML = `<div class="videoEmpty">
-                No se pudo cargar la lista de videos.
-              </div>`;
+          introVideoContainer.innerHTML = `
+      <div class="videoEmpty">
+        No se pudo cargar la lista de videos.
+      </div>
+    `;
 
-          mesaVideosContainer.innerHTML = `<div class="videoEmpty">
-                No se pudo cargar la lista de videos.
-              </div>`;
+          mesaVideosContainer.innerHTML = `
+      <div class="videoEmpty">
+        No se pudo cargar la lista de videos.
+      </div>
+    `;
         }
       }
 
-      /* =====================================================
-           INTRO
-           ===================================================== */
+      function renderIntro(intros) {
+        const container = document.getElementById("introVideoContainer");
 
-      function renderIntro(existe) {
-        if (!existe) {
-          introVideoContainer.innerHTML = `<div class="videoEmpty">
-                No hay video INTRO configurado.
-              </div>`;
+        /* ---------------------------------------------
+     SIN VIDEOS
+     --------------------------------------------- */
+
+        if (!intros || intros.length === 0) {
+          container.innerHTML = `
+      <div class="videoEmpty">
+        No hay videos INTRO configurados.
+      </div>
+    `;
 
           return;
         }
 
-        introVideoContainer.innerHTML = `
+        /* ---------------------------------------------
+     GENERAR TARJETAS
+     --------------------------------------------- */
 
-            <div class="videoCard">
+        container.innerHTML = intros
+          .map((nombre) => {
+            const numero = nombre.match(/^intro-(\d+)\.mp4$/i)?.[1] || "";
 
-              <div class="videoCardName">
-                intro.mp4
-              </div>
+            return `
+      <div class="videoCard">
 
-              <div class="videoButtons">
+        <div class="videoCardName">
+          ${nombre}
+        </div>
 
-                <button
-                  class="videoPlayButton"
-                  type="button"
-                  onclick="playManagedVideo(
-                    '/videos/intro.mp4',
-                    'INTRO'
-                  )"
-                >
-                  ▶ Ver
-                </button>
+        <div class="videoButtons">
 
-                <button
-                  class="videoDeleteButton"
-                  type="button"
-                  onclick="deleteManagedVideo('intro')"
-                >
-                  🗑
-                </button>
+          <button
+            class="videoPlayButton"
+            type="button"
+            onclick="playManagedVideo(
+              '/videos/INTRO/${nombre}',
+              'INTRO ${numero}'
+            )"
+          >
+            ▶ Ver
+          </button>
 
-              </div>
+          <button
+            class="videoEditButton"
+            type="button"
+            onclick="changeIntroVideo('${nombre}')"
+          >
+            ✏️ Cambiar
+          </button>
 
-            </div>
+          <button
+            class="videoDeleteButton"
+            type="button"
+            onclick="deleteManagedVideo('${nombre}')"
+          >
+            🗑
+          </button>
 
-          `;
+        </div>
+
+      </div>
+    `;
+          })
+          .join("");
       }
-
-      /* =====================================================
-           MESAS
-           ===================================================== */
 
       function renderMesas(mesas) {
         mesaVideosContainer.innerHTML = "";
@@ -1287,51 +1507,126 @@
         mesaCount.textContent = `${mesas.length}`;
 
         if (!mesas.length) {
-          mesaVideosContainer.innerHTML = `<div class="videoEmpty">
-                No hay videos de mesas.
-              </div>`;
+          mesaVideosContainer.innerHTML = `
+      <div class="videoEmpty">
+        No hay videos de mesas.
+      </div>
+    `;
 
           return;
         }
 
-        mesas.forEach((mesa) => {
+        mesas.forEach((nombreArchivo) => {
+          // Ejemplo:
+          // nombreArchivo = "mesa-1.mp4"
+          // numeroMesa = 1
+
+          const match = nombreArchivo.match(/^mesa-(\d+)\.mp4$/i);
+
+          if (!match) {
+            console.warn("⚠️ Nombre de video de mesa inválido:", nombreArchivo);
+            return;
+          }
+
+          const numeroMesa = Number(match[1]);
+
           const card = document.createElement("div");
 
           card.className = "videoCard";
 
           card.innerHTML = `
 
-                <div class="videoCardName">
-                  Mesa ${mesa}
-                </div>
+      <div class="videoCardName">
+        Mesa ${numeroMesa}
+      </div>
 
-                <div class="videoButtons">
+      <div class="videoButtons">
 
-                  <button
-                    class="videoPlayButton"
-                    type="button"
-                    onclick="playManagedVideo(
-                      '/videos/mesa-${mesa}.mp4',
-                      'Mesa ${mesa}'
-                    )"
-                  >
-                    ▶ Ver
-                  </button>
+        <button
+          class="videoPlayButton"
+          type="button"
+          onclick="playManagedVideo(
+            '/videos/${nombreArchivo}',
+            'Mesa ${numeroMesa}'
+          )"
+        >
+          ▶ Ver
+        </button>
 
-                  <button
-                    class="videoDeleteButton"
-                    type="button"
-                    onclick="deleteManagedVideo(${mesa})"
-                  >
-                    🗑
-                  </button>
+        <button
+          class="videoDeleteButton"
+          type="button"
+          onclick="deleteManagedVideo(${numeroMesa})"
+        >
+          🗑
+        </button>
 
-                </div>
+      </div>
 
-              `;
+    `;
 
           mesaVideosContainer.appendChild(card);
         });
+      }
+
+      function renderRechazar(existe) {
+        if (!existe) {
+          rechazarVideoContainer.innerHTML = `
+      <div class="videoEmpty">
+        No hay video RECHAZAR configurado.
+      </div>
+    `;
+
+          return;
+        }
+
+        rechazarVideoContainer.innerHTML = `
+
+    <div class="managedVideoCard">
+
+
+      <div class="videoButtons">
+
+        <button
+        class="videoPlayButton"
+          type="button"
+          onclick="playManagedVideo(
+            '/videos/rechazar.mp4',
+            'RECHAZAR'
+          )"
+        >
+          ▶ Ver
+        </button>
+
+        <button
+          class="videoEditButton"
+          type="button"
+          onclick="changeRechazarVideo()"
+        >
+          ✏️ Cambiar
+        </button>
+
+        <button
+        class="videoDeleteButton"
+          type="button"
+          onclick="deleteManagedVideo('rechazar.mp4')"
+        >
+          🗑
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+      }
+
+      function changeIntroVideo(nombre) {
+        introFileInput.dataset.intro = nombre;
+
+        introFileInput.value = "";
+
+        introFileInput.click();
       }
 
       /* =====================================================
@@ -1394,12 +1689,6 @@
         introFileInput.click();
       });
 
-      function changeIntroVideo() {
-        introFileInput.value = "";
-
-        introFileInput.click();
-      }
-
       introFileInput.addEventListener("change", async () => {
         const file = introFileInput.files[0];
 
@@ -1407,12 +1696,46 @@
           return;
         }
 
-        await uploadVideo(file, "intro");
+        const introExistente = introFileInput.dataset.intro;
+
+        if (introExistente) {
+          await uploadVideo(file, "intro-update", introExistente);
+
+          delete introFileInput.dataset.intro;
+        } else {
+          await uploadVideo(file, "intro");
+        }
       });
 
       /* =====================================================
-           AGREGAR MESA
-           ===================================================== */
+   SUBIR / CAMBIAR RECHAZAR
+   ===================================================== */
+
+      addRechazarBtn.addEventListener("click", () => {
+        rechazarFileInput.value = "";
+
+        rechazarFileInput.click();
+      });
+
+      rechazarFileInput.addEventListener("change", async () => {
+        const file = rechazarFileInput.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        await uploadVideo(file, "rechazar");
+      });
+
+      /* =====================================================
+   CAMBIAR RECHAZAR
+   ===================================================== */
+
+      function changeRechazarVideo() {
+        rechazarFileInput.value = "";
+
+        rechazarFileInput.click();
+      }
 
       addMesaBtn.addEventListener("click", () => {
         mesaNumberInput.value = "";
@@ -1478,11 +1801,7 @@
         await uploadVideo(file, mesa);
       });
 
-      /* =====================================================
-           SUBIR VIDEO
-           ===================================================== */
-
-      async function uploadVideo(file, destino) {
+      async function uploadVideo(file, destino, nombreExistente = null) {
         if (!file) {
           alert("No se seleccionó ningún video.");
 
@@ -1497,9 +1816,13 @@
 
         const esIntro = destino === "intro";
 
+        const esIntroUpdate = destino === "intro-update";
+
+        const esRechazar = destino === "rechazar";
+
         let numeroMesa = null;
 
-        if (!esIntro) {
+        if (!esIntro && !esIntroUpdate && !esRechazar) {
           numeroMesa = Number(destino);
 
           if (!Number.isInteger(numeroMesa) || numeroMesa < 1) {
@@ -1509,16 +1832,27 @@
           }
         }
 
-        const nombre = esIntro ? "intro.mp4" : `mesa-${numeroMesa}.mp4`;
-
         const formData = new FormData();
 
         formData.append("video", file);
 
-        formData.append("tipo", esIntro ? "intro" : "mesa");
+        formData.append(
+          "tipo",
+          esIntro
+            ? "intro"
+            : esIntroUpdate
+              ? "intro-update"
+              : esRechazar
+                ? "rechazar"
+                : "mesa",
+        );
 
-        if (!esIntro) {
+        if (!esIntro && !esIntroUpdate && !esRechazar) {
           formData.append("mesa", String(numeroMesa));
+        }
+
+        if (esIntroUpdate && nombreExistente) {
+          formData.append("nombre", nombreExistente);
         }
 
         try {
@@ -1533,7 +1867,7 @@
             throw new Error(result.error || "No se pudo subir el video.");
           }
 
-          alert(`✓ Video guardado correctamente:\n\n${nombre}`);
+          alert(`✓ Video guardado correctamente:\n\n${result.nombre}`);
 
           await loadVideos();
         } catch (error) {
@@ -1543,13 +1877,20 @@
         }
       }
 
-      /* =====================================================
-           ELIMINAR VIDEO
-           ===================================================== */
-
       async function deleteManagedVideo(destino) {
-        const nombre =
-          destino === "intro" ? "intro.mp4" : `mesa-${Number(destino)}.mp4`;
+        let nombre;
+
+        if (typeof destino === "string") {
+          /*
+           * INTRO
+           */
+          nombre = destino;
+        } else {
+          /*
+           * MESA
+           */
+          nombre = `mesa-${Number(destino)}.mp4`;
+        }
 
         if (
           !confirm(
@@ -1585,7 +1926,6 @@
           alert("Error al eliminar:\n" + error.message);
         }
       }
-
       /* =====================================================
            ARRASTRAR ADMINISTRADOR DE VIDEOS
            ===================================================== */
