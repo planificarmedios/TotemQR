@@ -421,10 +421,6 @@ if (saveCamSelection) {
   };
 }
 
-// ======================================================
-// INICIAR LECTOR QR
-// ======================================================
-
 async function startQrScanner(qrCamId = null) {
   console.log("📷 Iniciando lector QR...");
 
@@ -443,146 +439,7 @@ async function startQrScanner(qrCamId = null) {
   }
 
   // ======================================================
-  // SOLICITAR PERMISO DE CÁMARA
-  // ======================================================
-
-  try {
-    console.log("📷 Solicitando acceso a la cámara...");
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-    });
-
-    console.log("✅ Acceso a cámara concedido.");
-
-    stream.getTracks().forEach((track) => track.stop());
-  } catch (error) {
-    console.error("❌ No se pudo acceder a la cámara:", error);
-
-    if (qrResult) {
-      qrResult.style.color = "red";
-
-      qrResult.textContent = "❌ No se pudo activar la cámara";
-    }
-
-    return;
-  }
-
-  // ======================================================
-  // OBTENER CÁMARAS
-  // ======================================================
-
-  let videoDevices = [];
-
-  try {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-
-    videoDevices = devices.filter((device) => device.kind === "videoinput");
-
-    console.log("📷 Cámaras encontradas:", videoDevices.length);
-
-    videoDevices.forEach((device, index) => {
-      console.log(`📷 Cámara ${index + 1}:`, {
-        deviceId: device.deviceId,
-
-        label: device.label,
-      });
-    });
-  } catch (error) {
-    console.error("❌ Error obteniendo cámaras:", error);
-
-    return;
-  }
-
-  // ------------------------------------------------------
-  // Verificar cámaras
-  // ------------------------------------------------------
-
-  if (videoDevices.length === 0) {
-    console.error("❌ No se encontró ninguna cámara.");
-
-    if (qrResult) {
-      qrResult.style.color = "red";
-
-      qrResult.textContent = "❌ No se encontró ninguna cámara";
-    }
-
-    return;
-  }
-
-  // ======================================================
-  // DETERMINAR CAMERA ID
-  // ======================================================
-
-  let cameraId = qrCamId;
-
-  // ==================================================
-  // SI NO SE PASÓ UNA CÁMARA,
-  // RECUPERAR LA CÁMARA GUARDADA
-  // ==================================================
-
-  if (!cameraId) {
-    const camaraGuardada = localStorage.getItem(CAMERA_STORAGE_KEY);
-
-    if (
-      camaraGuardada &&
-      videoDevices.some((device) => device.deviceId === camaraGuardada)
-    ) {
-      cameraId = camaraGuardada;
-
-      const camaraEncontrada = videoDevices.find(
-        (device) => device.deviceId === camaraGuardada,
-      );
-
-      console.log(
-        "📷 Utilizando cámara guardada:",
-        camaraEncontrada?.label || "Cámara",
-      );
-    } else {
-      // ==============================================
-      // FALLBACK:
-      // SI NO HAY CÁMARA GUARDADA,
-      // USAR LA PRIMERA DISPONIBLE
-      // ==============================================
-
-      const primeraCamara = videoDevices.find((device) => device.deviceId);
-
-      if (primeraCamara) {
-        cameraId = primeraCamara.deviceId;
-
-        console.log(
-          "📷 No hay cámara guardada. Utilizando primera cámara:",
-          primeraCamara.label || "Cámara",
-        );
-
-        // Guardarla también
-        localStorage.setItem(CAMERA_STORAGE_KEY, cameraId);
-      }
-    }
-  }
-
-  if (!cameraId) {
-    console.error("❌ La cámara existe pero no tiene deviceId.");
-
-    if (qrResult) {
-      qrResult.style.color = "red";
-
-      qrResult.textContent = "❌ No se pudo identificar la cámara";
-    }
-
-    return;
-  }
-
-  console.log("📷 Device ID seleccionado:", cameraId);
-
-  // ======================================================
-  // CREAR SCANNER
-  // ======================================================
-
-  qrScanner = new Html5Qrcode("qrVideo");
-
-  // ======================================================
-  // PROCESAMIENTO DEL QR
+  // FUNCIÓN PARA PROCESAR EL QR
   // ======================================================
 
   const onScanSuccess = (qrCodeMessage) => {
@@ -624,11 +481,9 @@ async function startQrScanner(qrCamId = null) {
     const partes = qrCodeMessage.split(" | ");
 
     const mensaje = partes[0];
-
     const codigo = partes[1];
 
     console.log("📝 Mensaje:", mensaje);
-
     console.log("🔑 Código:", codigo);
 
     // ==================================================
@@ -660,7 +515,6 @@ async function startQrScanner(qrCamId = null) {
 
     if (qrResult) {
       qrResult.textContent = "✅ Mesa " + nroMesa;
-
       qrResult.style.color = "lime";
     }
 
@@ -672,11 +526,15 @@ async function startQrScanner(qrCamId = null) {
   };
 
   // ======================================================
-  // INICIAR HTML5 QR CODE
+  // FUNCIÓN PARA INICIAR CON UNA CÁMARA CONOCIDA
   // ======================================================
 
-  try {
-    console.log("📷 Iniciando Html5Qrcode con deviceId...");
+  async function iniciarConCamara(cameraId) {
+    console.log("📷 Device ID seleccionado:", cameraId);
+
+    qrScanner = new Html5Qrcode("qrVideo");
+
+    console.log("📷 Iniciando Html5Qrcode directamente...");
 
     await qrScanner.start(
       {
@@ -684,15 +542,11 @@ async function startQrScanner(qrCamId = null) {
           exact: cameraId,
         },
       },
-
       {
         fps: 10,
-
         qrbox: 250,
       },
-
       onScanSuccess,
-
       () => {
         // No mostramos los errores
         // normales mientras busca QR.
@@ -703,16 +557,206 @@ async function startQrScanner(qrCamId = null) {
 
     if (qrResult) {
       qrResult.style.color = "#fef9f9ff";
-
       qrResult.textContent = "📷 Cámara activada, apunta tu QR";
     }
+  }
+
+  // ======================================================
+  // CAMINO RÁPIDO
+  //
+  // Si ya tenemos una cámara seleccionada/guardada,
+  // intentamos arrancarla DIRECTAMENTE.
+  //
+  // Esto evita:
+  // getUserMedia()
+  // enumerateDevices()
+  // detener stream
+  // ======================================================
+
+  let cameraId = qrCamId;
+
+  if (!cameraId) {
+    cameraId = localStorage.getItem(CAMERA_STORAGE_KEY);
+  }
+
+  if (cameraId) {
+    console.log("⚡ Intentando inicio rápido con cámara guardada...");
+
+    try {
+      await iniciarConCamara(cameraId);
+
+      // Si llegó hasta acá, funcionó.
+      return;
+    } catch (error) {
+      console.warn(
+        "⚠️ No se pudo iniciar directamente con la cámara guardada.",
+      );
+
+      console.warn("⚠️ Se realizará detección completa de cámaras...");
+
+      if (qrScanner) {
+        try {
+          await qrScanner.stop();
+        } catch (e) {}
+
+        qrScanner = null;
+      }
+    }
+  }
+
+  // ======================================================
+  // FALLBACK COMPLETO
+  //
+  // Solo se ejecuta si:
+  // - Es la primera vez
+  // - No existe cámara guardada
+  // - La cámara guardada dejó de estar disponible
+  // ======================================================
+
+  console.log("📷 Ejecutando detección completa de cámaras...");
+
+  // ======================================================
+  // SOLICITAR PERMISO DE CÁMARA
+  // ======================================================
+
+  try {
+    console.log("📷 Solicitando acceso a la cámara...");
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+    });
+
+    console.log("✅ Acceso a cámara concedido.");
+
+    stream.getTracks().forEach((track) => track.stop());
+  } catch (error) {
+    console.error("❌ No se pudo acceder a la cámara:", error);
+
+    if (qrResult) {
+      qrResult.style.color = "red";
+      qrResult.textContent = "❌ No se pudo activar la cámara";
+    }
+
+    return;
+  }
+
+  // ======================================================
+  // OBTENER CÁMARAS
+  // ======================================================
+
+  let videoDevices = [];
+
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+
+    videoDevices = devices.filter((device) => device.kind === "videoinput");
+
+    console.log("📷 Cámaras encontradas:", videoDevices.length);
+
+    videoDevices.forEach((device, index) => {
+      console.log(`📷 Cámara ${index + 1}:`, {
+        deviceId: device.deviceId,
+        label: device.label,
+      });
+    });
+  } catch (error) {
+    console.error("❌ Error obteniendo cámaras:", error);
+    return;
+  }
+
+  // ------------------------------------------------------
+  // Verificar cámaras
+  // ------------------------------------------------------
+
+  if (videoDevices.length === 0) {
+    console.error("❌ No se encontró ninguna cámara.");
+
+    if (qrResult) {
+      qrResult.style.color = "red";
+      qrResult.textContent = "❌ No se encontró ninguna cámara";
+    }
+
+    return;
+  }
+
+  // ======================================================
+  // DETERMINAR CAMERA ID
+  // ======================================================
+
+  cameraId = qrCamId;
+
+  if (!cameraId) {
+    const camaraGuardada = localStorage.getItem(CAMERA_STORAGE_KEY);
+
+    if (
+      camaraGuardada &&
+      videoDevices.some((device) => device.deviceId === camaraGuardada)
+    ) {
+      cameraId = camaraGuardada;
+
+      const camaraEncontrada = videoDevices.find(
+        (device) => device.deviceId === camaraGuardada,
+      );
+
+      console.log(
+        "📷 Utilizando cámara guardada:",
+        camaraEncontrada?.label || "Cámara",
+      );
+    } else {
+      // ==============================================
+      // FALLBACK:
+      // USAR PRIMERA CÁMARA DISPONIBLE
+      // ==============================================
+
+      const primeraCamara = videoDevices.find((device) => device.deviceId);
+
+      if (primeraCamara) {
+        cameraId = primeraCamara.deviceId;
+
+        console.log(
+          "📷 No hay cámara guardada. Utilizando primera cámara:",
+          primeraCamara.label || "Cámara",
+        );
+
+        localStorage.setItem(CAMERA_STORAGE_KEY, cameraId);
+      }
+    }
+  }
+
+  if (!cameraId) {
+    console.error("❌ La cámara existe pero no tiene deviceId.");
+
+    if (qrResult) {
+      qrResult.style.color = "red";
+      qrResult.textContent = "❌ No se pudo identificar la cámara";
+    }
+
+    return;
+  }
+
+  // ======================================================
+  // INICIAR CÁMARA DESPUÉS DEL FALLBACK
+  // ======================================================
+
+  try {
+    await iniciarConCamara(cameraId);
+
+    // Guardamos la cámara que efectivamente funcionó.
+    localStorage.setItem(CAMERA_STORAGE_KEY, cameraId);
   } catch (error) {
     console.error("❌ Error iniciando lector QR:", error);
 
     if (qrResult) {
       qrResult.style.color = "red";
-
       qrResult.textContent = "❌ Error iniciando lector QR";
+    }
+
+    if (qrScanner) {
+      try {
+        await qrScanner.stop();
+      } catch (e) {}
+
+      qrScanner = null;
     }
   }
 }

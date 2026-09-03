@@ -21,7 +21,6 @@
         <div id="screen" data-orientation="horizontal">
           <video
             id="mesaVideo"
-            muted
             loop
             playsinline
             style="
@@ -839,8 +838,6 @@
         saturate: 1,
 
         volume: 1,
-
-        muted: true,
 
         orientation: "horizontal",
       };
@@ -2280,7 +2277,7 @@
 
         video.volume = config.volume ?? 1;
 
-        video.muted = config.muted ?? true;
+        video.muted = false;
 
         // MESA-1 SIEMPRE VERTICAL
         setOrientation(false);
