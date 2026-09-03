@@ -129,6 +129,51 @@ function obtenerPrimerNumeroIntroLibre() {
   return numero;
 }
 
+function generarListaVideos() {
+  try {
+    // ================================
+    // INTRO
+    // ================================
+    const intros = fs
+      .readdirSync(introPath)
+      .filter((nombre) => /^intro-\d+\.mp4$/i.test(nombre))
+      .sort((a, b) => Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]));
+
+    // ================================
+    // MESAS
+    // ================================
+    const mesas = fs
+      .readdirSync(videosPath)
+      .filter((nombre) => /^mesa-\d+\.mp4$/i.test(nombre))
+      .sort((a, b) => Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]));
+
+    // ================================
+    // RECHAZAR
+    // ================================
+    const rechazar = fs.existsSync(path.join(videosPath, "rechazar.mp4"));
+
+    // ================================
+    // GENERAR JSON
+    // ================================
+    const lista = {
+      intros,
+      mesas,
+      rechazar,
+    };
+
+    const listaPath = path.join(videosPath, "lista.json");
+
+    fs.writeFileSync(listaPath, JSON.stringify(lista, null, 2), "utf8");
+
+    console.log("📝 lista.json actualizado:");
+    console.log("   🎞️ INTRO:", intros);
+    console.log("   🪑 MESAS:", mesas);
+    console.log("   ❌ RECHAZAR:", rechazar);
+  } catch (error) {
+    console.error("❌ Error generando lista.json:", error);
+  }
+}
+
 /* =====================================================
    API - LISTAR VIDEOS
    ===================================================== */
@@ -249,6 +294,8 @@ app.post("/api/videos/upload", upload.single("video"), async (req, res) => {
 
       console.log(`🎞️ INTRO agregado: ${nombre}`);
 
+      generarListaVideos();
+
       return res.json({
         ok: true,
         tipo: "intro",
@@ -319,6 +366,8 @@ app.post("/api/videos/upload", upload.single("video"), async (req, res) => {
 
       console.log("❌ Video RECHAZAR actualizado.");
 
+      generarListaVideos();
+
       return res.json({
         ok: true,
         tipo: "rechazar",
@@ -364,6 +413,8 @@ app.post("/api/videos/upload", upload.single("video"), async (req, res) => {
       archivoTemporal = null;
 
       console.log(`🪑 Video de mesa guardado: ${nombre}`);
+
+      generarListaVideos();
 
       return res.json({
         ok: true,
@@ -422,20 +473,17 @@ app.post("/api/videos/delete", (req, res) => {
     if (/^intro-\d+\.mp4$/i.test(nombre)) {
       archivo = path.join(introPath, nombre);
     } else if (/^mesa-\d+\.mp4$/i.test(nombre)) {
-
-    /* =================================================
+      /* =================================================
          MESA
          ================================================= */
       archivo = path.join(videosPath, nombre);
     } else if (nombre.toLowerCase() === "rechazar.mp4") {
-
-    /* =================================================
+      /* =================================================
          RECHAZAR
          ================================================= */
       archivo = path.join(videosPath, "rechazar.mp4");
     } else {
-
-    /* =================================================
+      /* =================================================
          NOMBRE INVÁLIDO
          ================================================= */
       return res.status(400).json({
@@ -460,6 +508,8 @@ app.post("/api/videos/delete", (req, res) => {
     fs.unlinkSync(archivo);
 
     console.log(`🗑️ Video eliminado: ${nombre}`);
+
+    generarListaVideos();
 
     res.json({
       ok: true,
@@ -511,6 +561,8 @@ app.get("/", (req, res) => {
 /* =====================================================
    INICIAR SERVIDOR
    ===================================================== */
+
+generarListaVideos();
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log("");

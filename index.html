@@ -962,18 +962,16 @@
 
       let introActivo = true;
 
-      /* =====================================================
-     CARGAR LISTA DE INTRO
-     ===================================================== */
-
       async function cargarIntros() {
         try {
-          console.log("🎞️ Consultando videos INTRO...");
+          console.log("🎞️ Consultando lista de videos...");
 
-          const response = await fetch(asset("api/videos"));
+          const response = await fetch("videos/lista.json", {
+            cache: "no-store",
+          });
 
           if (!response.ok) {
-            throw new Error("No se pudo consultar /api/videos");
+            throw new Error("No se pudo consultar videos/lista.json");
           }
 
           const data = await response.json();
